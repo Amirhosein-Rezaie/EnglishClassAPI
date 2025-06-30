@@ -78,8 +78,8 @@ DATABASES = {
         'NAME': 'EnglishClass',
         'HOST': 'localhost',
         'PORT': '5432',
-        'USER': 'postgresql',
-        'PASSWORD': 'ADMIN'
+        'USER': 'postgres',
+        'PASSWORD': 'admin'
     }
 }
 

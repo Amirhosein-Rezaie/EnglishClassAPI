@@ -25,12 +25,12 @@ class Users(AbstractUser):
 # the model of user profile
 class UserProfile(models.Model):
     image = models.ImageField(
-        upload_to='images/profiles/', null=True, blank=True)
+        upload_to='images/profiles/users/', null=True, blank=True)
     user = models.ForeignKey(
         Users, on_delete=models.CASCADE, null=False, blank=False)
 
     def __str__(self):
-        return self.image
+        return self.user
 
 
 # the model of levels

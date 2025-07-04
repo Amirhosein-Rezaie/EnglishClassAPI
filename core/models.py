@@ -11,12 +11,16 @@ class Users(AbstractUser):
         ADMIN = "ADMIN"
         PERSONEL = "PERSONEL"
 
-    first_name = models.CharField(max_length=100, null=False, blank=False)
-    last_name = models.CharField(max_length=100, null=False, blank=False)
     national_code = models.CharField(max_length=25, null=True, blank=True)
     phone = models.CharField(max_length=50, null=True, blank=True)
     role = models.CharField(
-        choices=ROLES, default=ROLES.PERSONEL, null=False, blank=False)
+        choices=ROLES.choices, default=ROLES.PERSONEL, null=False, blank=False, max_length=20
+    )
+
+    groups = None
+    user_permissions = None
+    date_joined = None
+    email = None
 
     class Meta:
         db_table = 'Users'
@@ -30,13 +34,13 @@ class UserProfile(models.Model):
     image = models.ImageField(
         upload_to='images/profiles/users/', null=True, blank=True)
     user = models.ForeignKey(
-        Users, on_delete=models.CASCADE, null=False, blank=False)
+        Users, on_delete=models.CASCADE, null=False, blank=False, related_name="user_profiles")
 
     class Meta:
         db_table = 'UserProfiles'
 
     def __str__(self):
-        return self.user
+        return self.user.username
 
 
 # the model of levels
@@ -60,18 +64,18 @@ class Books(models.Model):
 
     title = models.CharField(max_length=100, null=False, blank=False)
     level = models.ForeignKey(
-        levels, on_delete=models.SET_NULL, null=False, blank=False)
+        levels, on_delete=models.CASCADE, null=False, blank=False, related_name="books")
     type = models.CharField(
-        max_length=50, choices=TYPES_BOOK, null=False, blank=False)
+        max_length=50, choices=TYPES_BOOK.choices, null=False, blank=False)
     number = models.IntegerField(validators=[
         MinValueValidator(1)
     ], null=False, blank=False)
     image = models.ImageField(upload_to='images/books/', null=True, blank=True)
-    price = models.IntegerChoices(
+    price = models.IntegerField(
         validators=[
             MinValueValidator(1)
         ],
-        null=True, blank=True
+        null=False, blank=False
     )
 
     class Meta:
@@ -83,7 +87,8 @@ class Books(models.Model):
 
 # the model of login's log
 class Logins(models.Model):
-    user = models.ForeignKey(Users, null=False, blank=False)
+    user = models.ForeignKey(Users, null=False, blank=False,
+                             on_delete=models.CASCADE, related_name="login_logs")
     date = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(null=False, blank=False)
 
@@ -91,4 +96,4 @@ class Logins(models.Model):
         db_table = 'Logins'
 
     def __str__(self):
-        return self.user
+        return f"{self.user.username} - {'Success' if self.status else 'Failed'}"

@@ -18,15 +18,16 @@ class Students(models.Model):
 
 # the model of student profiles
 class StudentProfiles(models.Model):
-    student = models.ForeignKey(Students, null=False, blank=False)
+    student = models.ForeignKey(
+        Students, null=False, blank=False, on_delete=models.CASCADE)
     image = models.ImageField(null=True, blank=True,
-                              upload_to='iamges/profiles/students/')
+                              upload_to='images/profiles/students/')
 
     class Meta:
         db_table = 'StudentProfiles'
 
     def __str__(self):
-        return self.student
+        return f"{self.student}"
 
 
 # the model of teacher
@@ -45,12 +46,13 @@ class Teachers(models.Model):
 
 # the model of student profiles
 class TeacherProfiles(models.Model):
-    teacher = models.ForeignKey(Teachers, null=False, blank=False)
+    teacher = models.ForeignKey(
+        Teachers, null=False, blank=False, on_delete=models.CASCADE)
     image = models.ImageField(null=True, blank=True,
-                              upload_to='iamges/profiles/teachers/')
+                              upload_to='images/profiles/teachers/')
 
     class Meta:
         db_table = 'TeacherProfiles'
 
     def __str__(self):
-        return self.teacher
+        return f"{self.teacher}"

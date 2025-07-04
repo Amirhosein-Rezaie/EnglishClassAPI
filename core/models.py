@@ -18,6 +18,9 @@ class Users(AbstractUser):
     role = models.CharField(
         choices=ROLES, default=ROLES.PERSONEL, null=False, blank=False)
 
+    class Meta:
+        db_table = 'Users'
+
     def __str__(self):
         return self.username
 
@@ -29,6 +32,9 @@ class UserProfile(models.Model):
     user = models.ForeignKey(
         Users, on_delete=models.CASCADE, null=False, blank=False)
 
+    class Meta:
+        db_table = 'UserProfiles'
+
     def __str__(self):
         return self.user
 
@@ -37,6 +43,9 @@ class UserProfile(models.Model):
 class levels(models.Model):
     title = models.CharField(
         primary_key=True, unique=True, null=False, blank=False, max_length=100)
+
+    class Meta:
+        db_table = 'Levels'
 
     def __str__(self):
         return self.title
@@ -50,7 +59,7 @@ class Books(models.Model):
         STORY_BOOK = "STORY_BOOK"
 
     title = models.CharField(max_length=100, null=False, blank=False)
-    level = models.OneToOneField(
+    level = models.ForeignKey(
         levels, on_delete=models.SET_NULL, null=False, blank=False)
     type = models.CharField(
         max_length=50, choices=TYPES_BOOK, null=False, blank=False)
@@ -65,6 +74,9 @@ class Books(models.Model):
         null=True, blank=True
     )
 
+    class Meta:
+        db_table = 'Books'
+
     def __str__(self):
         return self.title
 
@@ -74,6 +86,9 @@ class Logins(models.Model):
     user = models.ForeignKey(Users, null=False, blank=False)
     date = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(null=False, blank=False)
+
+    class Meta:
+        db_table = 'Logins'
 
     def __str__(self):
         return self.user

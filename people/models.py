@@ -9,6 +9,9 @@ class Students(models.Model):
     birthday = models.DateField(null=True, blank=False)
     phone = models.CharField(max_length=15, null=False, blank=False)
 
+    class Meta:
+        db_table = 'Students'
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -18,6 +21,9 @@ class StudentProfiles(models.Model):
     student = models.ForeignKey(Students, null=False, blank=False)
     image = models.ImageField(null=True, blank=True,
                               upload_to='iamges/profiles/students/')
+
+    class Meta:
+        db_table = 'StudentProfiles'
 
     def __str__(self):
         return self.student
@@ -30,6 +36,9 @@ class Teachers(models.Model):
     national_code = models.CharField(max_length=100, null=False, blank=False)
     phone = models.CharField(max_length=15, null=False, blank=False)
 
+    class Meta:
+        db_table = 'Teachers'
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -39,6 +48,9 @@ class TeacherProfiles(models.Model):
     teacher = models.ForeignKey(Teachers, null=False, blank=False)
     image = models.ImageField(null=True, blank=True,
                               upload_to='iamges/profiles/teachers/')
+
+    class Meta:
+        db_table = 'TeacherProfiles'
 
     def __str__(self):
         return self.teacher

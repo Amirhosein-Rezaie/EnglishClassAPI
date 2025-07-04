@@ -58,6 +58,12 @@ class Books(models.Model):
         MinValueValidator(1)
     ], null=False, blank=False)
     image = models.ImageField(upload_to='images/books/', null=True, blank=True)
+    price = models.IntegerChoices(
+        validators=[
+            MinValueValidator(1)
+        ],
+        null=True, blank=True
+    )
 
     def __str__(self):
         return self.title

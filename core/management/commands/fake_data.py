@@ -10,13 +10,13 @@ from education import models as EducationModels
 
 
 class Command(BaseCommand):
-    print("Creating the fake data in db ... \n")
+    print("\nCreating the fake data in db ... \n")
 
     def handle(self, *args, **options):
         fake = Faker('fa_IR')
 
         # the insert data into user table
-        print("Inserting to Users ... ")
+        print("Inserting to Users ...", end=' ')
         for _ in range(5):
             CoreModels.Users.objects.create(
                 username=fake.user_name(),
@@ -27,10 +27,19 @@ class Command(BaseCommand):
                 role=random.choice(list(CoreModels.Users.ROLES)),
                 password=fake.password()
             )
-        print("The inserting data to users has been done ... Ok \n")
+        print('OK')
+
+        # insert data into user's profile
+        print("Inserting to user's profile ...", end=' ')
+        for _ in range(5):
+            CoreModels.UserProfile.objects.create(
+                image=fake.image_url(),
+                user=random.choice(list(CoreModels.Users.objects.all()))
+            )
+        print('OK')
 
         # the insert data into levels table
-        print("inserting to levels ... ")
+        print("Inserting to levels ...", end=' ')
         levels = [
             'Elemntary',
             'Intermdiant',
@@ -43,10 +52,10 @@ class Command(BaseCommand):
             CoreModels.levels.objects.create(
                 title=levels[index]
             )
-        print("The inserting data to levels has been done ... Ok \n")
+        print('OK')
 
         # insert into the books models
-        print("Inserting to Books ... ")
+        print("Inserting to Books ...", end=' ')
         fake = Faker()
         for _ in range(5):
             CoreModels.Books.objects.create(
@@ -57,4 +66,15 @@ class Command(BaseCommand):
                 image=fake.image_url(),
                 price=random.randint(100000, 1000000)
             )
-        print("The inserting data to books has been done ... Ok \n")
+        print('OK')
+
+        # insert into the logins model
+        print("The inserting logins ...", end=' ')
+        fake = Faker('fa-IR')
+        for _ in range(30):
+            CoreModels.Logins.objects.create(
+                user=random.choice(list(CoreModels.Users.objects.all())),
+                status=fake.boolean(),
+                date=fake.date()
+            )
+        print('OK')

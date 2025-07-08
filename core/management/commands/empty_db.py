@@ -17,3 +17,5 @@ class Command(BaseCommand):
         empty(CoreModels.Users)
         empty(CoreModels.levels)
         empty(CoreModels.Books)
+        empty(CoreModels.Logins)
+        empty(CoreModels.UserProfile)

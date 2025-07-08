@@ -70,7 +70,7 @@ class Command(BaseCommand):
         print('OK')
 
         # insert into the logins model
-        print("Inserting logins ...", end=' ')
+        print("Inserting to logins ...", end=' ')
         fake = Faker('fa-IR')
         for _ in range(30):
             CoreModels.Logins.objects.create(

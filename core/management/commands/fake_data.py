@@ -58,7 +58,7 @@ class Command(BaseCommand):
         # insert into the books models
         print("Inserting to Books ...", end=' ')
         fake = Faker()
-        for _ in range(5):
+        for _ in range(10):
             CoreModels.Books.objects.create(
                 title=fake.sentence(nb_words=3).rstrip('.'),
                 level=random.choice(CoreModels.levels.objects.all()),
@@ -121,5 +121,74 @@ class Command(BaseCommand):
                 teacher=random.choice(
                     list(PeopleModels.Teachers.objects.all())),
                 image=fake.image_url(),
+            )
+        print('OK')
+
+        # # fake data for eduation app
+        # inserting to terms
+        fake = Faker()
+        print("Inserting to terms ...", end=' ')
+        for _ in range(7):
+            EducationModels.Terms.objects.create(
+                title=fake.bothify("T" + "L" + "#"),
+                level=random.choice(list(CoreModels.levels.objects.all())),
+                student_book=random.choice(list(CoreModels.Books.objects.filter(
+                    type=CoreModels.Books.TYPES_BOOK.STUDENT_BOOK))),
+                work_book=random.choice(list(CoreModels.Books.objects.filter(
+                    type=CoreModels.Books.TYPES_BOOK.WORK_BOOK))),
+                story_book=random.choice(list(CoreModels.Books.objects.filter(
+                    type=CoreModels.Books.TYPES_BOOK.STORY_BOOK))),
+                teacher=random.choice(
+                    list(PeopleModels.Teachers.objects.all())),
+                tution=random.randint(100000, 3000000),
+                start_date=fake.date(),
+                end_date=fake.date(),
+                start_time=fake.time(),
+                end_time=fake.time(),
+                type=random.choice(list(EducationModels.Terms.TERM_TYPES)),
+                user=random.choice(list(CoreModels.Users.objects.all())),
+            )
+        print('OK')
+
+        # inserting to Registers
+        print("Inserting to Registers ...", end=' ')
+        for _ in range(PeopleModels.Students.objects.all().count()):
+            EducationModels.Registers.objects.create(
+                student=random.choice(
+                    list(PeopleModels.Students.objects.all())),
+                term=random.choice(list(EducationModels.Terms.objects.all())),
+                # date -> auto add
+                status=random.choice(list(EducationModels.STATUS_PAY)),
+                user=random.choice(list(CoreModels.Users.objects.all())),
+            )
+        print('OK')
+
+        # isnerting to Grades
+        print('Inserting to Grades ...', end=' ')
+        for _ in range(EducationModels.Terms.objects.all().count() * PeopleModels.Students.objects.all().count()):
+            EducationModels.Grades.objects.create(
+                student=random.choice(
+                    list(PeopleModels.Students.objects.all())),
+                term=random.choice(list(EducationModels.Terms.objects.all())),
+                class_grade=random.randint(1, 10),
+                workbook_grade=random.randint(1, 20),
+                Storybook_grade=random.randint(1, 10),
+                Videoclip_grade=random.randint(1, 10),
+                Film_grade=random.randint(1, 10),
+                Exam_grade=random.randint(1, 40),
+            )
+        print('OK')
+
+        # inserting to BookSales
+        print("Inserting to BookSales ...", end=' ')
+        for _ in range(PeopleModels.Students.objects.all().count() * CoreModels.Books.objects.all().count()):
+            EducationModels.BookSales.objects.create(
+                student=random.choice(
+                    list(PeopleModels.Students.objects.all())),
+                book=random.choice(list(CoreModels.Books.objects.all())),
+                # date -> auto add
+                number=random.randint(1, 10),
+                user=random.choice(list(CoreModels.Users.objects.all())),
+                status=random.choice(list(EducationModels.STATUS_PAY)),
             )
         print('OK')

@@ -2,19 +2,18 @@ from django.core.management.base import BaseCommand
 from django.db import models
 from core import models as CoreModels
 from people import models as PeopleModels
+from education import models as EducationModels
 
 
 def empty(model: models.Model):
-    model_len = model.objects.all().count()
-    for _ in range(model_len):
-        model.objects.all().delete()
+    model.objects.all().delete()
     print(f"the {model.__name__} is empty ... !")
 
 
 class Command(BaseCommand):
-    help = "Empty the db ..."
-
     def handle(self, *args, **options):
+        print("Empty the db ...")
+
         # empty the core app
         empty(CoreModels.Users)
         empty(CoreModels.levels)
@@ -26,3 +25,8 @@ class Command(BaseCommand):
         empty(PeopleModels.StudentProfiles)
         empty(PeopleModels.Teachers)
         empty(PeopleModels.TeacherProfiles)
+        # empty the education app
+        empty(EducationModels.Terms)
+        empty(EducationModels.Registers)
+        empty(EducationModels.Grades)
+        empty(EducationModels.BookSales)

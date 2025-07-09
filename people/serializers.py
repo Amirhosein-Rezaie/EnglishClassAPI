@@ -21,7 +21,7 @@ class StudentSerializer(ModelSerializer):
 # teacher profiles
 class TeacherProfile(ModelSerializer):
     class Meta:
-        model = models.StudentProfiles
+        model = models.TeacherProfiles
         fields = '__all__'
 
 

@@ -4,6 +4,10 @@ from core.serializers import (
     BookSerializer,
     UserSerializer
 )
+from people.serializers import (
+    StudentSerializer,
+    TeacherSerializer,
+)
 from django.db.models import Sum
 
 
@@ -12,7 +16,7 @@ class TermSerializer(ModelSerializer):
     student_book = BookSerializer()
     work_book = BookSerializer()
     story_book = BookSerializer()
-    # teacher = -> need teacher serializer in people app
+    teacher = TeacherSerializer()
     user = UserSerializer()
 
     class Meta:
@@ -22,7 +26,7 @@ class TermSerializer(ModelSerializer):
 
 # registers
 class RegistersViewset(ModelSerializer):
-    # student -> need student serializer in people
+    student = StudentSerializer()
     term = TermSerializer()
     user = UserSerializer()
 
@@ -42,7 +46,7 @@ class GradeSerializer(ModelSerializer):
 
 # book sales
 class BookSaleSerializer(ModelSerializer):
-    # student -> need student serializer in people app
+    student = StudentSerializer()
     book = BookSerializer()
     user = UserSerializer()
 

@@ -19,7 +19,7 @@ class Students(models.Model):
 # the model of student profiles
 class StudentProfiles(models.Model):
     student = models.ForeignKey(
-        Students, null=False, blank=False, on_delete=models.CASCADE)
+        Students, null=False, blank=False, on_delete=models.CASCADE, related_name='student_profile')
     image = models.ImageField(null=True, blank=True,
                               upload_to='images/profiles/students/')
 
@@ -47,7 +47,7 @@ class Teachers(models.Model):
 # the model of student profiles
 class TeacherProfiles(models.Model):
     teacher = models.ForeignKey(
-        Teachers, null=False, blank=False, on_delete=models.CASCADE)
+        Teachers, null=False, blank=False, on_delete=models.CASCADE, related_name='teacher_profile')
     image = models.ImageField(null=True, blank=True,
                               upload_to='images/profiles/teachers/')
 

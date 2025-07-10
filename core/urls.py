@@ -1,6 +1,8 @@
 from django.urls import path, include
 from . import views
 from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 
 # users router
 user_router = DefaultRouter()
@@ -25,6 +27,7 @@ logins_router = DefaultRouter()
 logins_router.register('', views.LoginViewset)
 
 urlpatterns = [
+    path('token/', TokenObtainPairView.as_view()),
     path('users/', include(user_router.urls)),
     path('levels/', include(levels_router.urls)),
     path('books/', include(books_router.urls)),

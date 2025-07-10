@@ -138,6 +138,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # the drf settings
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
 }
 
 AUTH_USER_MODEL = 'core.Users'

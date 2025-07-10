@@ -20,7 +20,10 @@ class Users(AbstractUser):
     groups = None
     user_permissions = None
     date_joined = None
-    email = None
+    last_login = None
+    is_staff = None
+    # is_active = None
+    is_superuser = None
 
     class Meta:
         db_table = 'Users'

@@ -10,6 +10,12 @@ class UserViewset(ModelViewSet):
     queryset = models.Users.objects.all()
 
 
+# user profile
+class UserProfileViewset(ModelViewSet):
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.UserProfile.objects.all()
+
+
 # levels viewset
 class LevelViewset(ModelViewSet):
     serializer_class = serializers.LevelSerializer

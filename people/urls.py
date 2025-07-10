@@ -15,8 +15,14 @@ student_profiles_router.register('', views.StudentProfileViewset)
 teacher_router = DefaultRouter()
 teacher_router.register('', views.TeacherViewset)
 
+# teacher profile router
+teacher_profile_router = DefaultRouter()
+teacher_profile_router.register('', views.TeacherProfileViewset)
+
+
 urlpatterns = [
     path('students/', include(student_router.urls)),
     path('student-profiles/', include(student_profiles_router.urls)),
     path('teachers/', include(teacher_router.urls)),
+    path('teacher-profile/', include(teacher_profile_router.urls))
 ]

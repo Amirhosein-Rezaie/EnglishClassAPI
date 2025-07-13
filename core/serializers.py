@@ -52,6 +52,8 @@ class BookSerializer(ModelSerializer):
 
 # logins
 class LoginSerializer(ModelSerializer):
+    user_detail = UserSerializer(source='user', read_only=True)
+
     class Meta:
         model = models.Logins
         fields = '__all__'

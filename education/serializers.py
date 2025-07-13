@@ -13,11 +13,11 @@ from django.db.models import Sum
 
 # Terms
 class TermSerializer(ModelSerializer):
-    student_book = BookSerializer()
-    work_book = BookSerializer()
-    story_book = BookSerializer()
-    teacher = TeacherSerializer()
-    user = UserSerializer()
+    student_book_detail = BookSerializer(source='student_book', read_only=True)
+    work_book_detail = BookSerializer(source='work_book', read_only=True)
+    story_book_detail = BookSerializer(source='story_book', read_only=True)
+    teacher_detail = TeacherSerializer(source='teacher', read_only=True)
+    user_detail = UserSerializer(source='user', read_only=True)
 
     class Meta:
         model = models.Terms
@@ -26,9 +26,9 @@ class TermSerializer(ModelSerializer):
 
 # registers
 class RegistersViewset(ModelSerializer):
-    student = StudentSerializer()
-    term = TermSerializer()
-    user = UserSerializer()
+    student_detail = StudentSerializer(source='student', read_only=True)
+    term_detail = TermSerializer(source='term', read_only=True)
+    user_detail = UserSerializer(source='user', read_only=True)
 
     class Meta:
         model = models.Registers
@@ -37,7 +37,8 @@ class RegistersViewset(ModelSerializer):
 
 # grades
 class GradeSerializer(ModelSerializer):
-    term = TermSerializer()
+    term_detail = TermSerializer(source='term', read_only=True)
+    student_detail = StudentSerializer(source='student', read_only=True)
 
     class Meta:
         model = models.Grades
@@ -46,9 +47,9 @@ class GradeSerializer(ModelSerializer):
 
 # book sales
 class BookSaleSerializer(ModelSerializer):
-    student = StudentSerializer()
-    book = BookSerializer()
-    user = UserSerializer()
+    student_detail = StudentSerializer(source='student', read_only=True)
+    book_detail = BookSerializer(source='book', read_only=True)
+    user_detail = UserSerializer(source='user', read_only=True)
 
     class Meta:
         model = models.BookSales

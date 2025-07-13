@@ -2,6 +2,7 @@ from django.shortcuts import render
 from . import serializers
 from rest_framework.viewsets import ModelViewSet
 from . import models
+from EnglishClass.permissions import (NotAllow, DeleteForAdmin)
 
 
 # users viewset
@@ -26,9 +27,18 @@ class LevelViewset(ModelViewSet):
 class BookViewset(ModelViewSet):
     serializer_class = serializers.BookSerializer
     queryset = models.Books.objects.all()
+    permission_classes = [DeleteForAdmin]
 
 
 # logins viewset
 class LoginViewset(ModelViewSet):
     serializer_class = serializers.LoginSerializer
     queryset = models.Logins.objects.all()
+
+    def get_permissions(self):
+        method = self.request.method
+        if method in ['DELETE', 'UPDATE', 'POST']:
+            return [NotAllow()]
+        # if method in ['POST']:
+        #     return [AllowAny()]
+        return super().get_permissions()

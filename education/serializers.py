@@ -25,7 +25,7 @@ class TermSerializer(ModelSerializer):
 
 
 # registers
-class RegistersViewset(ModelSerializer):
+class RegisterSerializer(ModelSerializer):
     student_detail = StudentSerializer(source='student', read_only=True)
     term_detail = TermSerializer(source='term', read_only=True)
     user_detail = UserSerializer(source='user', read_only=True)

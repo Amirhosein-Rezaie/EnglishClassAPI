@@ -15,6 +15,10 @@ def dynamic_search(request: Request, model: Model, serializer: ModelSerializer):
         try:
             query_search = Q()
             for key, value in query_params.items():
+                if not value:
+                    return Response({
+                        "details": f"مقدار برای جست و جو وجود ندارد"
+                    }, status=status.HTTP_400_BAD_REQUEST)
                 field = key
                 if key not in ['id']:
                     field += "__istartswith"

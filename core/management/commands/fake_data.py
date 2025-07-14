@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from faker import Faker
-
+from django.contrib.auth.hashers import make_password
 import random
 
 # the models
@@ -26,7 +26,7 @@ class Command(BaseCommand):
                 national_code=fake.random_number(digits=10),
                 phone=fake.bothify(text="09#########"),
                 role=random.choice(list(CoreModels.Users.ROLES)),
-                password=fake.password()
+                password=make_password(fake.password())
             )
         print('OK')
 

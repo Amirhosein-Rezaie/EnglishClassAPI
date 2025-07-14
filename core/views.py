@@ -2,6 +2,7 @@ from . import serializers
 from rest_framework.viewsets import ModelViewSet
 from . import models
 from EnglishClass.permissions import (NotAllow, DeleteForAdmin)
+from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from drf_spectacular.utils import extend_schema
 from EnglishClass.helper import dynamic_search
@@ -15,6 +16,11 @@ description_search_swagger = "ارسال گویری پارامتر برای جس
 class UserViewset(ModelViewSet):
     serializer_class = serializers.UserSerializer
     queryset = models.Users.objects.all()
+
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [AllowAny()]
+        return super().get_permissions()
 
     @extend_schema(
         description=description_search_swagger

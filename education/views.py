@@ -1,9 +1,11 @@
-from django.shortcuts import render
 from . import models
 from . import serializers
 from rest_framework.viewsets import ModelViewSet
 from EnglishClass.permissions import (DeleteForAdmin, NotAllow)
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.request import Request
+from EnglishClass.helper import dynamic_search, description_search_swagger
+from drf_spectacular.utils import extend_schema
 
 
 # terms
@@ -12,10 +14,19 @@ class TermViewset(ModelViewSet):
     queryset = models.Terms.objects.all()
     permission_classes = [DeleteForAdmin]
 
+    @extend_schema(
+        description=description_search_swagger
+    )
+    def list(self, request: Request, *args, **kwargs):
+        if request.query_params:
+            return dynamic_search(request=request, model=models.Terms,
+                                  serializer=serializers.TermSerializer)
+        return super().list(request, *args, **kwargs)
+
 
 # register
 class RegisterViewset(ModelViewSet):
-    serializer_class = serializers.RegistersViewset
+    serializer_class = serializers.RegisterSerializer
     queryset = models.Registers.objects.all()
     permission_classes = [IsAuthenticated]
 
@@ -23,6 +34,15 @@ class RegisterViewset(ModelViewSet):
         if self.request.method in ['DELETE']:
             return [NotAllow()]
         return super().get_permissions()
+
+    @extend_schema(
+        description=description_search_swagger
+    )
+    def list(self, request: Request, *args, **kwargs):
+        if request.query_params:
+            return dynamic_search(request=request, model=models.Registers,
+                                  serializer=serializers.RegisterSerializer)
+        return super().list(request, *args, **kwargs)
 
 
 # grades
@@ -36,6 +56,15 @@ class GradeViewset(ModelViewSet):
             return [NotAllow()]
         return super().get_permissions()
 
+    @extend_schema(
+        description=description_search_swagger
+    )
+    def list(self, request: Request, *args, **kwargs):
+        if request.query_params:
+            return dynamic_search(request=request, model=models.Grades,
+                                  serializer=serializers.GradeSerializer)
+        return super().list(request, *args, **kwargs)
+
 
 # book sales
 class BookSaleViewset(ModelViewSet):
@@ -47,3 +76,12 @@ class BookSaleViewset(ModelViewSet):
         if self.request.method in ['DELETE']:
             return [NotAllow()]
         return super().get_permissions()
+
+    @extend_schema(
+        description=description_search_swagger
+    )
+    def list(self, request: Request, *args, **kwargs):
+        if request.query_params:
+            return dynamic_search(request=request, model=models.BookSales,
+                                  serializer=serializers.BookSaleSerializer)
+        return super().list(request, *args, **kwargs)

@@ -2,6 +2,8 @@ from . import serializers
 from . import models
 from rest_framework.viewsets import ModelViewSet
 from EnglishClass.permissions import (DeleteForAdmin, IsAdminOrReadOnly)
+from rest_framework.request import Request
+from EnglishClass.helper import dynamic_search
 
 
 # students
@@ -9,6 +11,11 @@ class StudentViewset(ModelViewSet):
     serializer_class = serializers.StudentSerializer
     queryset = models.Students.objects.all()
     permission_classes = [DeleteForAdmin]
+
+    def list(self, request: Request, *args, **kwargs):
+        if request.query_params:
+            return dynamic_search(request=request, model=models.Students, serializer=serializers.StudentSerializer)
+        return super().list(request, *args, **kwargs)
 
 
 # student profiles
@@ -23,6 +30,11 @@ class TeacherViewset(ModelViewSet):
     serializer_class = serializers.TeacherSerializer
     queryset = models.Teachers.objects.all()
     permission_classes = [IsAdminOrReadOnly]
+
+    def list(self, request: Request, *args, **kwargs):
+        if request.query_params:
+            return dynamic_search(request=request, model=models.Teachers, serializer=serializers.TeacherSerializer)
+        return super().list(request, *args, **kwargs)
 
 
 # teacher profiles

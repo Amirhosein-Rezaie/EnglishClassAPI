@@ -4,7 +4,8 @@ from rest_framework.viewsets import ModelViewSet
 from EnglishClass.permissions import (DeleteForAdmin, NotAllow)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
-from EnglishClass.helper import dynamic_search
+from EnglishClass.helper import dynamic_search, description_search_swagger
+from drf_spectacular.utils import extend_schema
 
 
 # terms
@@ -13,6 +14,9 @@ class TermViewset(ModelViewSet):
     queryset = models.Terms.objects.all()
     permission_classes = [DeleteForAdmin]
 
+    @extend_schema(
+        description=description_search_swagger
+    )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
             return dynamic_search(request=request, model=models.Terms,
@@ -31,6 +35,9 @@ class RegisterViewset(ModelViewSet):
             return [NotAllow()]
         return super().get_permissions()
 
+    @extend_schema(
+        description=description_search_swagger
+    )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
             return dynamic_search(request=request, model=models.Registers,
@@ -49,6 +56,9 @@ class GradeViewset(ModelViewSet):
             return [NotAllow()]
         return super().get_permissions()
 
+    @extend_schema(
+        description=description_search_swagger
+    )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
             return dynamic_search(request=request, model=models.Grades,
@@ -67,6 +77,9 @@ class BookSaleViewset(ModelViewSet):
             return [NotAllow()]
         return super().get_permissions()
 
+    @extend_schema(
+        description=description_search_swagger
+    )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
             return dynamic_search(request=request, model=models.BookSales,

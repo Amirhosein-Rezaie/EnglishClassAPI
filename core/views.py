@@ -5,11 +5,7 @@ from EnglishClass.permissions import (NotAllow, DeleteForAdmin)
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from drf_spectacular.utils import extend_schema
-from EnglishClass.helper import dynamic_search
-
-
-# fields
-description_search_swagger = "ارسال گویری پارامتر برای جست و جو براساس فیلد های دیتابیس"
+from EnglishClass.helper import dynamic_search, description_search_swagger
 
 
 # users viewset
@@ -59,6 +55,9 @@ class BookViewset(ModelViewSet):
     queryset = models.Books.objects.all()
     permission_classes = [DeleteForAdmin]
 
+    @extend_schema(
+        description=description_search_swagger
+    )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
             return dynamic_search(request=request, model=models.Books,
@@ -79,6 +78,9 @@ class LoginViewset(ModelViewSet):
         #     return [AllowAny()]
         return super().get_permissions()
 
+    @extend_schema(
+        description=description_search_swagger
+    )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
             return dynamic_search(request=request, model=models.Logins,

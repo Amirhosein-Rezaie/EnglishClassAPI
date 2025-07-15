@@ -3,7 +3,8 @@ from . import models
 from rest_framework.viewsets import ModelViewSet
 from EnglishClass.permissions import (DeleteForAdmin, IsAdminOrReadOnly)
 from rest_framework.request import Request
-from EnglishClass.helper import dynamic_search
+from EnglishClass.helper import dynamic_search, description_search_swagger
+from drf_spectacular.utils import extend_schema
 
 
 # students
@@ -12,6 +13,9 @@ class StudentViewset(ModelViewSet):
     queryset = models.Students.objects.all()
     permission_classes = [DeleteForAdmin]
 
+    @extend_schema(
+        description=description_search_swagger
+    )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
             return dynamic_search(request=request, model=models.Students, serializer=serializers.StudentSerializer)
@@ -31,6 +35,9 @@ class TeacherViewset(ModelViewSet):
     queryset = models.Teachers.objects.all()
     permission_classes = [IsAdminOrReadOnly]
 
+    @extend_schema(
+        description=description_search_swagger
+    )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
             return dynamic_search(request=request, model=models.Teachers, serializer=serializers.TeacherSerializer)

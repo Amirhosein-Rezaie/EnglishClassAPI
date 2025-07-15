@@ -6,6 +6,11 @@ from django.db.models import Q, Model
 from rest_framework.serializers import ModelSerializer
 
 
+# fields
+description_search_swagger = "ارسال گویری پارامتر برای جست و جو براساس فیلد های دیتابیس"
+
+
+# functions
 def dynamic_search(request: Request, model: Model, serializer: ModelSerializer):
     """
     a function that you can have dynamic search in every ever

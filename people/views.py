@@ -18,7 +18,8 @@ class StudentViewset(ModelViewSet):
     )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
-            return dynamic_search(request=request, model=models.Students, serializer=serializers.StudentSerializer)
+            return dynamic_search(request=request, model=models.Students,
+                                  serializer=serializers.StudentSerializer)
         return super().list(request, *args, **kwargs)
 
 
@@ -40,7 +41,8 @@ class TeacherViewset(ModelViewSet):
     )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
-            return dynamic_search(request=request, model=models.Teachers, serializer=serializers.TeacherSerializer)
+            return dynamic_search(request=request, model=models.Teachers,
+                                  serializer=serializers.TeacherSerializer)
         return super().list(request, *args, **kwargs)
 
 

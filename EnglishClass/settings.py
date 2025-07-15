@@ -145,7 +145,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'EnglishClass.permissions.IsAdminUser',
-    )
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'EnglishClass.pagination.DynamicPagination',
 }
 
 AUTH_USER_MODEL = 'core.Users'

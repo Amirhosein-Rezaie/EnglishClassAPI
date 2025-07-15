@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-5_-iv4iqy^zn^1%3v$*za4g1v!x6&7^=mmxxzx8enkw!%dm5pz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'education',
     'core',
     'drf_spectacular',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'EnglishClass.urls'
@@ -157,3 +159,7 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14)
 }
+
+# cors settings
+CORS_ALLOW_ORIGINS = ['*']
+CORS_ALLOW_ALL_ORIGINS = True

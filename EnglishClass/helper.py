@@ -5,6 +5,7 @@ from rest_framework import status
 from django.db.models import Q, Model
 from rest_framework.serializers import ModelSerializer
 from EnglishClass.pagination import DynamicPagination
+from django.db.models import ForeignKey, OneToOneField, ManyToManyField
 
 
 # fields
@@ -18,6 +19,11 @@ def dynamic_search(request: Request, model: Model, serializer: ModelSerializer):
     """
     a function that you can have dynamic search in every ever
     """
+    relation_fields = [
+        f.name for f in model._meta.get_fields()
+        if isinstance(f, (ForeignKey, OneToOneField, ManyToManyField))
+    ]
+    print(relation_fields)
     query_params = request.query_params
     if query_params:
         try:
@@ -30,7 +36,7 @@ def dynamic_search(request: Request, model: Model, serializer: ModelSerializer):
                         "details": f"مقدار برای جست و جو وجود ندارد"
                     }, status=status.HTTP_400_BAD_REQUEST)
                 field = key
-                if key not in ['id']:
+                if key not in ['id'] + relation_fields:
                     field += "__istartswith"
                 query_search &= Q(**{f"{field}": value})
 

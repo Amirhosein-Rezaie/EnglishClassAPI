@@ -2,8 +2,9 @@ from . import serializers
 from rest_framework.viewsets import ModelViewSet
 from . import models
 from education import models as EducationModels
+from education.serializers import (GradeSerializer)
 from people import models as PeopleModels
-from people.serializers import (TeacherSerializer)
+from people.serializers import (TeacherSerializer, StudentSerializer)
 from EnglishClass.permissions import (NotAllow, DeleteForAdmin)
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
@@ -167,6 +168,28 @@ class Dashboard(APIView):
             book_sales[f"{status_pay.lower()}_count"] = EducationModels.BookSales.objects.filter(
                 status=status_pay).count()
         result['book_sales'] = book_sales
+
+        # students
+        students = {}
+        # # count of students
+        students['students_count'] = PeopleModels.Students.objects.all().count()
+        # # names of students with average grades
+        students_avrg_grades = {}
+        for student in StudentSerializer(PeopleModels.Students.objects.all(), many=True).data:
+            id = student['id']
+            total_grades = []
+            first_name = student['first_name']
+            last_name = student['last_name']
+            for grade in GradeSerializer(EducationModels.Grades.objects.filter(student=id), many=True).data:
+                total_grade = grade['class_grade'] + grade['workbook_grade'] + grade['Storybook_grade'] + \
+                    grade['Videoclip_grade'] + \
+                    grade['Film_grade'] + grade['Exam_grade']
+                print(total_grade)
+                total_grades.append(total_grade)
+            students_avrg_grades[f'{first_name} {last_name}'] = sum(
+                total_grades) / len(total_grades)
+        students['students_avrg_grades'] = students_avrg_grades
+        result['students'] = students
 
         # response
         return Response(result, status=status.HTTP_200_OK)

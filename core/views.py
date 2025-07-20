@@ -156,7 +156,17 @@ class Dashboard(APIView):
             )['point__avg']
             average_points[f"{first_name} {last_name}"] = average
         teachers['average_points'] = average_points
+        result['teachers'] = teachers
+
+        # book sales
+        book_sales = {}
+        # # count all of the book sales
+        book_sales['book_sales_count'] = EducationModels.BookSales.objects.all().count()
+        # # count each book sales by status
+        for status_pay in EducationModels.STATUS_PAY:
+            book_sales[f"{status_pay.lower()}_count"] = EducationModels.BookSales.objects.filter(
+                status=status_pay).count()
+        result['book_sales'] = book_sales
 
         # response
-        result['teachers'] = teachers
         return Response(result, status=status.HTTP_200_OK)

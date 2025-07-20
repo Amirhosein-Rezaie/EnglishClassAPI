@@ -6,6 +6,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from drf_spectacular.utils import extend_schema
 from EnglishClass.helper import dynamic_search, description_search_swagger
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django.contrib.auth.hashers import check_password
 
 
 # users viewset
@@ -86,3 +88,24 @@ class LoginViewset(ModelViewSet):
             return dynamic_search(request=request, model=models.Logins,
                                   serializer=serializers.LoginSerializer)
         return super().list(request, *args, **kwargs)
+
+
+# token view
+class CustomTokenObtainPairView(TokenObtainPairView):
+    def post(self, request: Request, *args, **kwargs):
+        """
+        set log for logins that the users take
+        """
+        data = request.data
+        username = data['username']
+        password = data['password']
+
+        user = models.Users.objects.get(username=username)
+        status = check_password(password, user.password)
+
+        models.Logins.objects.create(
+            user=user or None,
+            status=status
+        )
+
+        return super().post(request, *args, **kwargs)

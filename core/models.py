@@ -90,7 +90,7 @@ class Books(models.Model):
 
 # the model of login's log
 class Logins(models.Model):
-    user = models.ForeignKey(Users, null=False, blank=False,
+    user = models.ForeignKey(Users, null=True, blank=True, default=None,
                              on_delete=models.CASCADE, related_name="login_logs")
     date = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(null=False, blank=False)

@@ -3,6 +3,7 @@ from rest_framework.viewsets import ModelViewSet
 from . import models
 from education import models as EducationModels
 from people import models as PeopleModels
+from people.serializers import (TeacherSerializer)
 from EnglishClass.permissions import (NotAllow, DeleteForAdmin)
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
@@ -10,6 +11,7 @@ from drf_spectacular.utils import extend_schema
 from EnglishClass.helper import dynamic_search, description_search_swagger
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import check_password
+from django.db.models import Avg
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -120,18 +122,41 @@ class Dashboard(APIView):
     def get(self, request: Request):
         result = {}
 
-        # users count
-        result['users_count'] = models.Users.objects.all().count()
+        # users
+        users = {}
+        # # count of users
+        users['users_count'] = models.Users.objects.all().count()
+        # # count each of roles
+        for role in models.Users.ROLES:
+            users[f"{role.lower()}_count"] = models.Users.objects.filter(
+                role=role).count()
+        result['users'] = users
 
-        # count of registers that payed and haven't payed
-        PAYED = EducationModels.STATUS_PAY.PAYED
-        UNPAYED = EducationModels.STATUS_PAY.UNPAYED
+        # registers
         registers = {}
-        registers['payed_count'] = EducationModels.Registers.objects.filter(
-            status=PAYED).count()
-        registers['unpayed_count'] = EducationModels.Registers.objects.filter(
-            status=UNPAYED).count()
+        # # count each of pay status
+        for pay in EducationModels.STATUS_PAY:
+            registers[f"{pay.lower()}_count"] = EducationModels.Registers.objects.filter(
+                status=pay).count()
         result['registers'] = registers
 
+        # teachers
+        teachers = {}
+        # # count of teachers
+        teachers['teachers_count'] = PeopleModels.Teachers.objects.all().count()
+        # # names of teacher that have the highest average point
+        average_points = {}
+        for teacher in TeacherSerializer(PeopleModels.Teachers.objects.all(), many=True).data:
+            id = teacher['id']
+            first_name = teacher['first_name']
+            last_name = teacher['last_name']
+
+            average = EducationModels.Points.objects.filter(teacher=id).aggregate(
+                Avg('point')
+            )['point__avg']
+            average_points[f"{first_name} {last_name}"] = average
+        teachers['average_points'] = average_points
+
         # response
+        result['teachers'] = teachers
         return Response(result, status=status.HTTP_200_OK)

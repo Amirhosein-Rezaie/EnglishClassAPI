@@ -117,3 +117,21 @@ class BookSales(models.Model):
 
     def __str__(self):
         return f"{self.student} -> {self.user}"
+
+
+class Points(models.Model):
+    student = models.ForeignKey(
+        Students, on_delete=models.CASCADE, null=False, blank=False)
+    teacher = models.ForeignKey(
+        Teachers, on_delete=models.CASCADE, null=False, blank=False)
+    point = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)]
+    )
+    date = models.DateTimeField(auto_now_add=True)
+    description = models.TextField()
+
+    def __str__(self):
+        return f"{self.teacher.first_name + self.teacher.last_name} -> {self.point}"
+
+    class Meta:
+        db_table = 'Points'

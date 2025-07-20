@@ -192,3 +192,16 @@ class Command(BaseCommand):
                 status=random.choice(list(EducationModels.STATUS_PAY)),
             )
         print('OK')
+
+        # insertnig the fake data of points
+        print("Inserting to points ...", end=' ')
+        for _ in range(PeopleModels.Students.objects.all().count()):
+            EducationModels.Points.objects.create(
+                student=random.choice(
+                    list(PeopleModels.Students.objects.all())),
+                teacher=random.choice(
+                    list(PeopleModels.Teachers.objects.all())),
+                point=random.randint(1, 10),
+                description=fake.text()
+            )
+        print('OK')

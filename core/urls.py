@@ -31,5 +31,6 @@ urlpatterns = [
     path('levels/', include(levels_router.urls)),
     path('books/', include(books_router.urls)),
     path('logins/', include(logins_router.urls)),
-    path('user-profile/', include(user_profile_router.urls))
+    path('user-profile/', include(user_profile_router.urls)),
+    path('dashboard/', views.Dashboard.as_view()),
 ]

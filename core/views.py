@@ -1,6 +1,8 @@
 from . import serializers
 from rest_framework.viewsets import ModelViewSet
 from . import models
+from education import models as EducationModels
+from people import models as PeopleModels
 from EnglishClass.permissions import (NotAllow, DeleteForAdmin)
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
@@ -8,6 +10,9 @@ from drf_spectacular.utils import extend_schema
 from EnglishClass.helper import dynamic_search, description_search_swagger
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import check_password
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 
 # users viewset
@@ -109,3 +114,24 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         )
 
         return super().post(request, *args, **kwargs)
+
+
+class Dashboard(APIView):
+    def get(self, request: Request):
+        result = {}
+
+        # users count
+        result['users_count'] = models.Users.objects.all().count()
+
+        # count of registers that payed and haven't payed
+        PAYED = EducationModels.STATUS_PAY.PAYED
+        UNPAYED = EducationModels.STATUS_PAY.UNPAYED
+        registers = {}
+        registers['payed_count'] = EducationModels.Registers.objects.filter(
+            status=PAYED).count()
+        registers['unpayed_count'] = EducationModels.Registers.objects.filter(
+            status=UNPAYED).count()
+        result['registers'] = registers
+
+        # response
+        return Response(result, status=status.HTTP_200_OK)

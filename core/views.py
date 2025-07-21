@@ -1,6 +1,7 @@
 from . import serializers
 from rest_framework.viewsets import ModelViewSet
 from . import models
+from .serializers import (LevelSerializer)
 from education import models as EducationModels
 from education.serializers import (GradeSerializer)
 from people import models as PeopleModels
@@ -184,12 +185,24 @@ class Dashboard(APIView):
                 total_grade = grade['class_grade'] + grade['workbook_grade'] + grade['Storybook_grade'] + \
                     grade['Videoclip_grade'] + \
                     grade['Film_grade'] + grade['Exam_grade']
-                print(total_grade)
                 total_grades.append(total_grade)
             students_avrg_grades[f'{first_name} {last_name}'] = sum(
                 total_grades) / len(total_grades)
         students['students_avrg_grades'] = students_avrg_grades
         result['students'] = students
+
+        # terms
+        terms = {}
+        # # count of terms
+        terms['terms_count'] = EducationModels.Terms.objects.all().count()
+        # # count of terms by levels
+        terms_level_count = {}
+        for level in LevelSerializer(models.levels.objects.all(), many=True).data:
+            level = level['title']
+            terms_level_count[f"{level}"] = EducationModels.Terms.objects.filter(
+                level__title=level).count()
+        terms['terms_level_count'] = terms_level_count
+        result['terms'] = terms
 
         # response
         return Response(result, status=status.HTTP_200_OK)

@@ -7,7 +7,7 @@ from education.serializers import (GradeSerializer)
 from people import models as PeopleModels
 from people.serializers import (TeacherSerializer, StudentSerializer)
 from EnglishClass.permissions import (NotAllow, DeleteForAdmin)
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.request import Request
 from drf_spectacular.utils import extend_schema
 from EnglishClass.helper import dynamic_search, description_search_swagger
@@ -17,6 +17,7 @@ from django.db.models import Avg
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import permission_classes
 
 
 # users viewset
@@ -26,7 +27,7 @@ class UserViewset(ModelViewSet):
 
     def get_permissions(self):
         if self.request.method == 'POST':
-            return [AllowAny()]
+            return [AllowAny()] # # this is for test
         return super().get_permissions()
 
     @extend_schema(
@@ -120,6 +121,8 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         return super().post(request, *args, **kwargs)
 
 
+# dashboard
+@permission_classes([IsAuthenticated])
 class Dashboard(APIView):
     def get(self, request: Request):
         result = {}

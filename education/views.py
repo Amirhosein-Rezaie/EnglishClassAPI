@@ -11,6 +11,7 @@ from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Font
 from django.http import HttpResponse
 from io import BytesIO
+from education.helper import return_value_cell_term_excel
 
 
 # terms
@@ -121,8 +122,8 @@ class export_terms_excel(APIView):
         width = 40
 
         # header
-        columns = ['ردیف', 'کتاب زبان اموز', 'کتاب کار', 'کتاب داستان', 'نام معلم',
-                   'عنوان', 'شهریه', 'تاریخ شروع', 'تاریخ پایان', 'ساعت شروع', 'ساعت پایان', 'نوع', 'سطح']
+        columns = ['ردیف', 'عنوان', 'کتاب کار', 'کتاب داستان', 'کتاب زبان اموز',
+                   'نام معلم', 'شهریه', 'تاریخ شروع', 'تاریخ پایان', 'ساعت شروع', 'ساعت پایان', 'نوع', 'سطح']
         for col in range(len(columns)):
             cell = ws.cell(row=1, column=col+1)
             cell.value = columns[col]
@@ -134,26 +135,15 @@ class export_terms_excel(APIView):
             ws.row_dimensions[1].height = height
 
         # data
-        terms = serializers.TermSerializer(
-            models.Terms.objects.all(), many=True).data
-        values = []
+        terms = models.Terms.objects.all()
         row = 2
         for term in terms:
-            values = []
-            for key, value in dict(term).items():
-                if isinstance(value, dict):
-                    if 'title' in dict(value).keys():
-                        values.append(value['title'])
-                    if 'first_name' in dict(value).keys() and 'last_name' in dict(value).keys() and key == 'teacher_detail':
-                        values.append(
-                            f"{value['first_name']} {value['last_name']}")
-                if isinstance(value, str) or key == 'tution':
-                    values.append(value)
             for col in range(len(columns)):
                 cell = ws.cell(row=row, column=col+1)
-                cell.value = values[col - 1] if col != 0 else row - 1
+                cell.value = return_value_cell_term_excel(
+                    col=col, queryset=term, row=row)
+                cell.fill = fill if col != 0 else header_fill
                 cell.alignment = alignment
-                cell.fill = header_fill if col == 0 else fill
                 cell.border = border
             row += 1
 

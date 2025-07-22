@@ -5,6 +5,8 @@ from EnglishClass.permissions import (DeleteForAdmin, IsAdminOrReadOnly)
 from rest_framework.request import Request
 from EnglishClass.helper import dynamic_search, description_search_swagger
 from drf_spectacular.utils import extend_schema
+from rest_framework.views import APIView
+from .helper import export_excel
 
 
 # students
@@ -51,3 +53,27 @@ class TeacherProfileViewset(ModelViewSet):
     serializer_class = serializers.TeacherProfile
     queryset = models.TeacherProfiles.objects.all()
     permission_classes = [IsAdminOrReadOnly]
+
+
+# export excel files
+# # export students file
+class export_students_excel(APIView):
+    def get(self, request: Request):
+        return export_excel(
+            model=models.Students,
+            serializer=serializers.StudentSerializer,
+            columns=['نام', 'نام خانوادگی',
+                     'کد ملی', 'تاریخ تولد', 'شماره تماس'],
+            filename='students'
+        )
+
+
+# # export teachers file
+class export_teachers_excel(APIView):
+    def get(self, request: Request):
+        return export_excel(
+            model=models.Teachers,
+            serializer=serializers.TeacherSerializer,
+            columns=['نام', 'نام خانوادگی', 'کد ملی', 'شماره تلفن'],
+            filename='teachers'
+        )

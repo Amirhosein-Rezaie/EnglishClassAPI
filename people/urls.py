@@ -22,7 +22,11 @@ teacher_profile_router.register('', views.TeacherProfileViewset)
 
 urlpatterns = [
     path('students/', include(student_router.urls)),
+    path("students-excel/", views.export_students_excel.as_view(),
+         name="students_excel"),
     path('student-profiles/', include(student_profiles_router.urls)),
     path('teachers/', include(teacher_router.urls)),
+    path('teachers-excel/', views.export_teachers_excel.as_view(),
+         name='teachers_excel'),
     path('teacher-profile/', include(teacher_profile_router.urls))
 ]

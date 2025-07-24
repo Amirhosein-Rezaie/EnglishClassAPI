@@ -171,7 +171,7 @@ class export_grades_excel(APIView):
 
         # genral style
         # # fill
-        fill = PatternFill(fill_type='solid', fgColor='fff7bc')
+        fill = PatternFill(fill_type='solid', fgColor='fffdee')
         # # border
         side = Side(style='thin')
         border = Border(right=side, top=side, bottom=side)
@@ -188,8 +188,9 @@ class export_grades_excel(APIView):
         header_font = Font(name='Calibri', size=14, bold=True)
 
         # data style
-        total_grade_fill = PatternFill(
-            fill_type='solid', fgColor='fff7bc', bgColor='2c95f7')
+        total_grade_font_fail = Font(color='a91811', size=14, name='Calibri')
+        total_grade_font_pass = Font(color='17964c', size=14, name='Calibri')
+        grade_font_normal = Font(color='000000', name='calibri', size=14)
 
         # header
         columns = [
@@ -225,8 +226,14 @@ class export_grades_excel(APIView):
             for col in range(len(columns)):
                 cell = work_sheet.cell(row=row, column=col+1)
                 cell.value = values[col]
-                cell.fill = fill 
+                cell.fill = fill if col != 0 else header_fill
                 cell.border = border
+                cell.font = grade_font_normal
+                if col == len(columns) - 1:
+                    if cell.value >= 65:
+                        cell.font = total_grade_font_pass
+                    else:
+                        cell.font = total_grade_font_fail
                 cell.alignment = alignment
             row += 1
 

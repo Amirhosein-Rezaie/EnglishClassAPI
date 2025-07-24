@@ -25,18 +25,15 @@ class UserViewset(ModelViewSet):
     serializer_class = serializers.UserSerializer
     queryset = models.Users.objects.all()
 
-    def get_permissions(self):
-        if self.request.method == 'POST':
-            return [AllowAny()] # # this is for test
-        return super().get_permissions()
-
     @extend_schema(
         description=description_search_swagger
     )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
-            return dynamic_search(request=request, model=models.Users,
-                                  serializer=serializers.UserSerializer)
+            return dynamic_search(
+                request=request, model=models.Users,
+                serializer=serializers.UserSerializer
+            )
         return super().list(request, *args, **kwargs)
 
 
@@ -56,8 +53,10 @@ class LevelViewset(ModelViewSet):
     )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
-            return dynamic_search(request=request, model=models.levels,
-                                  serializer=serializers.LevelSerializer)
+            return dynamic_search(
+                request=request, model=models.levels,
+                serializer=serializers.LevelSerializer
+            )
         return super().list(request, *args, **kwargs)
 
 
@@ -72,8 +71,10 @@ class BookViewset(ModelViewSet):
     )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
-            return dynamic_search(request=request, model=models.Books,
-                                  serializer=serializers.BookSerializer)
+            return dynamic_search(
+                request=request, model=models.Books,
+                serializer=serializers.BookSerializer
+            )
         return super().list(request, *args, **kwargs)
 
 
@@ -95,8 +96,10 @@ class LoginViewset(ModelViewSet):
     )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
-            return dynamic_search(request=request, model=models.Logins,
-                                  serializer=serializers.LoginSerializer)
+            return dynamic_search(
+                request=request, model=models.Logins,
+                serializer=serializers.LoginSerializer
+            )
         return super().list(request, *args, **kwargs)
 
 

@@ -25,8 +25,10 @@ class TermViewset(ModelViewSet):
     )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
-            return dynamic_search(request=request, model=models.Terms,
-                                  serializer=serializers.TermSerializer)
+            return dynamic_search(
+                request=request, model=models.Terms,
+                serializer=serializers.TermSerializer
+            )
         return super().list(request, *args, **kwargs)
 
 
@@ -46,8 +48,10 @@ class RegisterViewset(ModelViewSet):
     )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
-            return dynamic_search(request=request, model=models.Registers,
-                                  serializer=serializers.RegisterSerializer)
+            return dynamic_search(
+                request=request, model=models.Registers,
+                serializer=serializers.RegisterSerializer
+            )
         return super().list(request, *args, **kwargs)
 
 
@@ -67,8 +71,10 @@ class GradeViewset(ModelViewSet):
     )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
-            return dynamic_search(request=request, model=models.Grades,
-                                  serializer=serializers.GradeSerializer)
+            return dynamic_search(
+                request=request, model=models.Grades,
+                serializer=serializers.GradeSerializer
+            )
         return super().list(request, *args, **kwargs)
 
 
@@ -88,8 +94,10 @@ class BookSaleViewset(ModelViewSet):
     )
     def list(self, request: Request, *args, **kwargs):
         if request.query_params:
-            return dynamic_search(request=request, model=models.BookSales,
-                                  serializer=serializers.BookSaleSerializer)
+            return dynamic_search(
+                request=request, model=models.BookSales,
+                serializer=serializers.BookSaleSerializer
+            )
         return super().list(request, *args, **kwargs)
 
 
@@ -122,8 +130,12 @@ class export_terms_excel(APIView):
         width = 40
 
         # header
-        columns = ['ردیف', 'عنوان', 'کتاب کار', 'کتاب داستان', 'کتاب زبان اموز',
-                   'نام معلم', 'شهریه', 'تاریخ شروع', 'تاریخ پایان', 'ساعت شروع', 'ساعت پایان', 'نوع', 'سطح']
+        columns = [
+            'ردیف', 'عنوان', 'کتاب کار', 'کتاب داستان',
+            'کتاب زبان اموز', 'نام معلم',
+            'شهریه', 'تاریخ شروع', 'تاریخ پایان',
+            'ساعت شروع', 'ساعت پایان', 'نوع', 'سطح'
+        ]
         for col in range(len(columns)):
             cell = ws.cell(row=1, column=col+1)
             cell.value = columns[col]

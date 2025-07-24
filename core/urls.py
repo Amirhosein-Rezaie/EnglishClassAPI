@@ -26,11 +26,11 @@ logins_router = DefaultRouter()
 logins_router.register('', views.LoginViewset)
 
 urlpatterns = [
-    path('token/', views.CustomTokenObtainPairView.as_view()),
-    path('users/', include(user_router.urls)),
-    path('levels/', include(levels_router.urls)),
-    path('books/', include(books_router.urls)),
-    path('logins/', include(logins_router.urls)),
-    path('user-profile/', include(user_profile_router.urls)),
-    path('dashboard/', views.Dashboard.as_view()),
+    path('token/', views.CustomTokenObtainPairView.as_view(), name='token-login'),
+    path('users/', include(user_router.urls), name='users'),
+    path('levels/', include(levels_router.urls), name='levels'),
+    path('books/', include(books_router.urls), name='books'),
+    path('logins/', include(logins_router.urls), name='logins-log'),
+    path('user-profile/', include(user_profile_router.urls), name='user-profile'),
+    path('dashboard/', views.Dashboard.as_view(), name='dashboard-statistics'),
 ]

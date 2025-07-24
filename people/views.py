@@ -13,6 +13,8 @@ from rest_framework import status
 from education.models import (Grades)
 from education.serializers import (GradeSerializer)
 from EnglishClass.pagination import DynamicPagination
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 
 
 # paginator
@@ -38,9 +40,10 @@ class StudentViewset(ModelViewSet):
 
 
 # get students grades of hole time
+@permission_classes([IsAuthenticated])
 class students_grades(APIView):
     def get(self, request: Request):
-        student_id = request.query_params.get('student_id')
+        student_id = request.query_params.get('student-id')
 
         if not student_id:
             return Response({

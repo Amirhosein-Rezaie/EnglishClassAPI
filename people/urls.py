@@ -27,6 +27,8 @@ urlpatterns = [
          name="students_excel"),
     path('student-profiles/', include(student_profiles_router.urls),
          name='student-profiles'),
+    path('student-grades/', views.students_grades.as_view(),
+         name='student_grades'),
     path('teachers/', include(teacher_router.urls),
          name='teachers'),
     path('teachers-excel/', views.export_teachers_excel.as_view(),

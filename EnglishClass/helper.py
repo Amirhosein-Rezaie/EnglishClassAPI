@@ -9,6 +9,7 @@ from django.db.models import (
     IntegerField, CharField, TextField, ForeignKey, OneToOneField, ManyToManyField
 )
 from django.db.models.constants import LOOKUP_SEP
+from EnglishClass.pagination import DynamicPagination
 
 
 # fields
@@ -81,3 +82,13 @@ def dynamic_search(request: Request, model: Model, serializer: ModelSerializer):
         paginated_founds = paginator.paginate_queryset(founds, request)
         serialize_found = serializer(paginated_founds, many=True)
         return paginator.get_paginated_response(serialize_found.data)
+
+
+# set limit of paginators in class and function base views
+def limit_paginate(request: Request):
+    """
+    get limit from query params and return
+    """
+    if request.query_params.get('limit'):
+        return request.query_params.get('limit')
+    return DynamicPagination.page_size

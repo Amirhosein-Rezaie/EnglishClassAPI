@@ -3,10 +3,20 @@ from . import models
 from rest_framework.viewsets import ModelViewSet
 from EnglishClass.permissions import (DeleteForAdmin, IsAdminOrReadOnly)
 from rest_framework.request import Request
-from EnglishClass.helper import dynamic_search, description_search_swagger
+from EnglishClass.helper import (
+    dynamic_search, description_search_swagger, limit_paginate)
 from drf_spectacular.utils import extend_schema
 from rest_framework.views import APIView
 from .helper import export_excel
+from rest_framework.response import Response
+from rest_framework import status
+from education.models import (Grades)
+from education.serializers import (GradeSerializer)
+from EnglishClass.pagination import DynamicPagination
+
+
+# paginator
+paginator = DynamicPagination()
 
 
 # students
@@ -25,6 +35,28 @@ class StudentViewset(ModelViewSet):
                 serializer=serializers.StudentSerializer
             )
         return super().list(request, *args, **kwargs)
+
+
+# get students grades of hole time
+class students_grades(APIView):
+    def get(self, request: Request):
+        student_id = request.query_params.get('student_id')
+
+        if not student_id:
+            return Response({
+                "error": 'شناسه ای یافت نشد',
+                "details": 'شناسه زبان آموزی ارسال نشده'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        grades = Grades.objects.filter(student=student_id)
+
+        # paginate
+        paginator.page_size = limit_paginate(request)
+        paginated_grades = paginator.paginate_queryset(
+            request=request, queryset=grades)
+        # serialize and response
+        serialized_grades = GradeSerializer(paginated_grades, many=True).data
+        return Response(serialized_grades, status=status.HTTP_200_OK)
 
 
 # student profiles

@@ -208,7 +208,15 @@ class Dashboard(APIView):
             terms_level_count[f"{level}"] = EducationModels.Terms.objects.filter(
                 level__title=level).count()
         terms['terms_level_count'] = terms_level_count
+        # # count number of students of per terms
+        terms_queryset = EducationModels.Terms.objects.all()
+        students_terms_count = {}
+        for term in terms_queryset:
+            count = EducationModels.Registers.objects.filter(
+                term=term.pk).count()
+            students_terms_count[f'{term.title}'] = count
+        terms['students_terms_count'] = students_terms_count
         result['terms'] = terms
-
+    
         # response
         return Response(result, status=status.HTTP_200_OK)

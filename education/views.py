@@ -17,6 +17,8 @@ from rest_framework import status
 from django.db.models import Q
 from people.models import Students
 from people.serializers import StudentSerializer
+from EnglishClass.permissions import IsAdminOrReadOnly
+from rest_framework.decorators import permission_classes
 
 
 # terms
@@ -38,6 +40,7 @@ class TermViewset(ModelViewSet):
 
 
 # count the number students in term with students data
+@permission_classes([IsAdminOrReadOnly])
 class term_students(APIView):
     def get(self, request: Request):
         query_params = request.query_params

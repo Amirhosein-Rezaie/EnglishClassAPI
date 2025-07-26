@@ -26,9 +26,9 @@ class DeleteForAdmin(BasePermission):
 class IsAdminOrReadOnly(BasePermission):
     def has_permission(self, request: Request, view):
         return bool(
-            request.user.is_authenticated and
-            request.user.role == Users.ROLES.ADMIN or
-            request.method in SAFE_METHODS
+            (request.user.is_authenticated) and
+            (request.user.role == Users.ROLES.ADMIN or
+             request.method in SAFE_METHODS)
         )
 
 

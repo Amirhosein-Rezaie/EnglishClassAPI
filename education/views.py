@@ -45,7 +45,7 @@ class term_students(APIView):
             return Response({
                 "error": "no query_params to search",
                 "detail": "پارامتری برای جست و جو پیدا نشد ... !",
-            }, status=status.HTTP_200_OK)
+            }, status=status.HTTP_400_BAD_REQUEST)
         id = query_params.get('id')
 
         result = {}
@@ -53,7 +53,6 @@ class term_students(APIView):
             id__in=models.Registers.objects.filter(
                 Q(term=id)).values_list('student', flat=True)
         )).count()
-        serializers.RegisterSerializer.Meta.fields = ['student_detail']
 
         result['students'] = StudentSerializer(Students.objects.filter(
             id__in=models.Registers.objects.filter(

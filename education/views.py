@@ -12,6 +12,11 @@ from openpyxl.styles import PatternFill, Border, Side, Alignment, Font
 from django.http import HttpResponse
 from io import BytesIO
 from education.helper import return_value_cell_term_excel
+from rest_framework.response import Response
+from rest_framework import status
+from django.db.models import Q
+from people.models import Students
+from people.serializers import StudentSerializer
 
 
 # terms
@@ -30,6 +35,32 @@ class TermViewset(ModelViewSet):
                 serializer=serializers.TermSerializer
             )
         return super().list(request, *args, **kwargs)
+
+
+# count the number students in term with students data
+class term_students(APIView):
+    def get(self, request: Request):
+        query_params = request.query_params
+        if not query_params.get('title') and not query_params.get('id'):
+            return Response({
+                "error": "no query_params to search",
+                "detail": "پارامتری برای جست و جو پیدا نشد ... !",
+            }, status=status.HTTP_200_OK)
+        id = query_params.get('id')
+
+        result = {}
+        result['count'] = Students.objects.filter(Q(
+            id__in=models.Registers.objects.filter(
+                Q(term=id)).values_list('student', flat=True)
+        )).count()
+        serializers.RegisterSerializer.Meta.fields = ['student_detail']
+
+        result['students'] = StudentSerializer(Students.objects.filter(
+            id__in=models.Registers.objects.filter(
+                term=id).values_list('student', flat=True)
+        ).distinct(), many=True).data
+
+        return Response(result, status=status.HTTP_200_OK)
 
 
 # register

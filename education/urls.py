@@ -22,6 +22,7 @@ booksale_router.register('', views.BookSaleViewset)
 urlpatterns = [
     path('terms/', include(term_router.urls), name='terms'),
     path('terms-excel/', views.export_terms_excel.as_view(), name='terms_excel'),
+    path("term_students/", views.term_students.as_view(), name="term_students"),
     path('registers/', include(register_router.urls), name='register-logs'),
     path('grades/', include(grade_router.urls), name='grades'),
     path('grades-excel/', views.export_grades_excel.as_view(), name='grades_excel'),

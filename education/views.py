@@ -5,7 +5,7 @@ from EnglishClass.permissions import (DeleteForAdmin, NotAllow)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from EnglishClass.helper import dynamic_search, description_search_swagger
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.views import APIView
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Font
@@ -40,8 +40,24 @@ class TermViewset(ModelViewSet):
 
 
 # count the number students in term with students data
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name='title', type=str, description='عنوان ترم', required=False
+        ),
+        OpenApiParameter(
+            name='id', type=int, description='شناسه ترم', required=False
+        ),
+    ]
+)
 @permission_classes([IsAdminOrReadOnly])
 class term_students(APIView):
+    """
+    اطلاعات زبان آموزانی که در ترم(متغیر) ثبت نام کرده اند
+
+    'حداقل یک پارمتر الزامی است'
+    """
+
     def get(self, request: Request):
         query_params = request.query_params
         if not query_params.get('title') and not query_params.get('id'):
@@ -137,6 +153,10 @@ class BookSaleViewset(ModelViewSet):
 
 # export excel file of terms
 class export_terms_excel(APIView):
+    """
+    خروجی فایل اکسل برای تمامی ترم ها
+    """
+
     def get(self, request: Request):
         wb = Workbook()
         ws = wb.active
@@ -209,6 +229,10 @@ class export_terms_excel(APIView):
 
 # export excel file for grades
 class export_grades_excel(APIView):
+    """
+    خروجی فایل اکسل برای تمامی نمره ها
+    """
+
     def get(self, request: Request):
         work_book = Workbook()
         work_sheet = work_book.active

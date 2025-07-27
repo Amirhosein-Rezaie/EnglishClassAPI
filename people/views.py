@@ -5,7 +5,7 @@ from EnglishClass.permissions import (DeleteForAdmin, IsAdminOrReadOnly)
 from rest_framework.request import Request
 from EnglishClass.helper import (
     dynamic_search, description_search_swagger, limit_paginate)
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from rest_framework.views import APIView
 from .helper import export_excel
 from rest_framework.response import Response
@@ -40,8 +40,18 @@ class StudentViewset(ModelViewSet):
 
 
 # get students grades of hole time
+@extend_schema(
+    parameters=[
+        OpenApiParameter(name='student-id', type=int,
+                         description='شناسه زبان آموز', required=True)
+    ]
+)
 @permission_classes([IsAuthenticated])
 class students_grades(APIView):
+    """
+    تمام نمرات یک زبان آموز در تمامی ترم ها
+    """
+
     def get(self, request: Request):
         student_id = request.query_params.get('student-id')
 
@@ -97,6 +107,10 @@ class TeacherProfileViewset(ModelViewSet):
 # export excel files
 # # export students file
 class export_students_excel(APIView):
+    """
+    خروجی فایل اکسل برای تمامی زبان آموزان
+    """
+
     def get(self, request: Request):
         return export_excel(
             model=models.Students,
@@ -111,6 +125,10 @@ class export_students_excel(APIView):
 
 # # export teachers file
 class export_teachers_excel(APIView):
+    """
+    خروجی فایل اکسل برای تمامی معلم ها
+    """
+
     def get(self, request: Request):
         return export_excel(
             model=models.Teachers,

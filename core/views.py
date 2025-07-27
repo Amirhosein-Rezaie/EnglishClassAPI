@@ -127,6 +127,10 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 # dashboard
 @permission_classes([IsAuthenticated])
 class Dashboard(APIView):
+    """
+    آمار های کلی
+    """
+
     def get(self, request: Request):
         result = {}
 
@@ -217,6 +221,6 @@ class Dashboard(APIView):
             students_terms_count[f'{term.title}'] = count
         terms['students_terms_count'] = students_terms_count
         result['terms'] = terms
-    
+
         # response
         return Response(result, status=status.HTTP_200_OK)

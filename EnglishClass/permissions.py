@@ -36,3 +36,12 @@ class IsAdminOrReadOnly(BasePermission):
 class NotAllow(BasePermission):
     def has_permission(self, request, view):
         return False
+
+
+# permissions for students
+class IsStudent(BasePermission):
+    def has_permission(self, request: Request, view):
+        return bool(
+            (request.user or request.user.is_authnticated) and
+            (request.user.role == Users.ROLES.STUDENT)
+        )

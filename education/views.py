@@ -50,16 +50,17 @@ class term_students(APIView):
                 "detail": "پارامتری برای جست و جو پیدا نشد ... !",
             }, status=status.HTTP_400_BAD_REQUEST)
         id = query_params.get('id')
+        title = query_params.get('title')
 
         result = {}
         result['count'] = Students.objects.filter(Q(
             id__in=models.Registers.objects.filter(
-                Q(term=id)).values_list('student', flat=True)
+                Q(term=id) | Q(term__title=title)).values_list('student', flat=True)
         )).count()
 
         result['students'] = StudentSerializer(Students.objects.filter(
-            id__in=models.Registers.objects.filter(
-                term=id).values_list('student', flat=True)
+            id__in=models.Registers.objects.filter(Q(
+                term=id) | Q(term__title=title)).values_list('student', flat=True)
         ).distinct(), many=True).data
 
         return Response(result, status=status.HTTP_200_OK)

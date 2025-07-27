@@ -11,7 +11,8 @@ class StudentProfile(ModelSerializer):
 
 # Students
 class StudentSerializer(ModelSerializer):
-    profiles = StudentProfile(many=True, source='student_profile')
+    profiles = StudentProfile(
+        many=True, source='student_profile', read_only=True)
 
     class Meta:
         model = models.Students

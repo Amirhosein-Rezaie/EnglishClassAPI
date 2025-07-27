@@ -15,6 +15,8 @@ from education.serializers import (GradeSerializer)
 from EnglishClass.pagination import DynamicPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
+from core.models import Users
+from django.contrib.auth.hashers import make_password
 
 
 # paginator
@@ -37,6 +39,15 @@ class StudentViewset(ModelViewSet):
                 serializer=serializers.StudentSerializer
             )
         return super().list(request, *args, **kwargs)
+
+    def create(self, request: Request, *args, **kwargs):
+        student = request.data
+        Users.objects.create(
+            username=student['national_code'],
+            password=make_password(student['phone']),
+            role=Users.ROLES.STUDENT
+        )
+        return super().create(request, *args, **kwargs)
 
 
 # get students grades of hole time

@@ -10,6 +10,7 @@ class Users(AbstractUser):
     class ROLES(models.TextChoices):
         ADMIN = "ADMIN"
         PERSONEL = "PERSONEL"
+        STUDENT = "STUDENT"
 
     national_code = models.CharField(max_length=25, null=True, blank=True)
     phone = models.CharField(max_length=50, null=True, blank=True)

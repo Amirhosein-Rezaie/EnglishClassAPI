@@ -6,8 +6,8 @@ from education import models as EducationModels
 from education.serializers import (GradeSerializer)
 from people import models as PeopleModels
 from people.serializers import (TeacherSerializer, StudentSerializer)
-from EnglishClass.permissions import (NotAllow, DeleteForAdmin)
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from EnglishClass.permissions import (NotAllow, DeleteForAdmin, IsAdminUser)
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from drf_spectacular.utils import extend_schema
 from EnglishClass.helper import dynamic_search, description_search_swagger
@@ -18,6 +18,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import permission_classes
+from django.db.models import Q
 
 
 # users viewset
@@ -125,7 +126,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 
 # dashboard
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 class Dashboard(APIView):
     """
     آمار های کلی
@@ -216,9 +217,11 @@ class Dashboard(APIView):
         terms_queryset = EducationModels.Terms.objects.all()
         students_terms_count = {}
         for term in terms_queryset:
-            count = EducationModels.Registers.objects.filter(
-                term=term.pk).count()
-            students_terms_count[f'{term.title}'] = count
+            count = PeopleModels.Students.objects.filter(Q(
+                id__in=EducationModels.Registers.objects.filter(
+                    term__id=term.pk).values_list('student', flat=True)
+            )).distinct().count()
+            students_terms_count[f'{term.title}__{term.pk}'] = count
         terms['students_terms_count'] = students_terms_count
         result['terms'] = terms
 

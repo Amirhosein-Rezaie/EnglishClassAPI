@@ -42,8 +42,9 @@ class StudentViewset(ModelViewSet):
 # get students grades of hole time
 @extend_schema(
     parameters=[
-        OpenApiParameter(name='student-id', type=int,
-                         description='شناسه زبان آموز', required=True)
+        OpenApiParameter(
+            name='student-id', type=int, description='شناسه زبان آموز', required=True
+        )
     ]
 )
 @permission_classes([IsAuthenticated])

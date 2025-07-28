@@ -42,7 +42,7 @@ class NotAllow(BasePermission):
 class IsStudent(BasePermission):
     def has_permission(self, request: Request, view):
         return bool(
-            (request.user or request.user.is_authnticated) and
+            (request.user and request.user.is_authenticated) and
             (request.user.role == Users.ROLES.STUDENT)
         )
 

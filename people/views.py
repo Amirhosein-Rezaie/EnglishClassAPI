@@ -2,7 +2,7 @@ from . import serializers
 from . import models
 from rest_framework.viewsets import ModelViewSet
 from EnglishClass.permissions import (
-    DeleteForAdmin, IsAdminOrReadOnly, GetStudentsOnly)
+    DeleteForAdmin, IsAdminOrReadOnly, AdminOrPersonel, IsStudent)
 from rest_framework.request import Request
 from EnglishClass.helper import (
     dynamic_search, description_search_swagger, limit_paginate)
@@ -28,7 +28,7 @@ paginator = DynamicPagination()
 class StudentViewset(ModelViewSet):
     serializer_class = serializers.StudentSerializer
     queryset = models.Students.objects.all()
-    permission_classes = [DeleteForAdmin]
+    permission_classes = [DeleteForAdmin, AdminOrPersonel]
 
     @extend_schema(
         description=description_search_swagger
@@ -59,7 +59,7 @@ class StudentViewset(ModelViewSet):
         )
     ]
 )
-@permission_classes([IsAuthenticated])
+@permission_classes([AdminOrPersonel])
 class students_grades(APIView):
     """
     تمام نمرات یک زبان آموز در تمامی ترم ها
@@ -87,6 +87,8 @@ class students_grades(APIView):
 
 # me students
 class StudentMe(APIView):
+    permission_classes = [IsStudent]
+
     def get(self, request: Request):
         student_username = request.user
         return Response(
@@ -101,7 +103,7 @@ class StudentMe(APIView):
 class StudentProfileViewset(ModelViewSet):
     serializer_class = serializers.StudentProfile
     queryset = models.StudentProfiles.objects.all()
-    permission_classes = [DeleteForAdmin]
+    permission_classes = [DeleteForAdmin, AdminOrPersonel]
 
 
 # teacher
@@ -126,7 +128,7 @@ class TeacherViewset(ModelViewSet):
 class TeacherProfileViewset(ModelViewSet):
     serializer_class = serializers.TeacherProfile
     queryset = models.TeacherProfiles.objects.all()
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly, AdminOrPersonel]
 
 
 # export excel files
@@ -135,6 +137,7 @@ class export_students_excel(APIView):
     """
     خروجی فایل اکسل برای تمامی زبان آموزان
     """
+    permission_classes = [AdminOrPersonel]
 
     def get(self, request: Request):
         return export_excel(
@@ -153,6 +156,7 @@ class export_teachers_excel(APIView):
     """
     خروجی فایل اکسل برای تمامی معلم ها
     """
+    permission_classes = [AdminOrPersonel]
 
     def get(self, request: Request):
         return export_excel(

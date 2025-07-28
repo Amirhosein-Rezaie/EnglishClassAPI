@@ -72,3 +72,11 @@ class NotAllowDelete(BasePermission):
         return bool(
             not (request.method in ['DELETE'])
         )
+
+
+# is anonymous
+class IsAnonymousUser(BasePermission):
+    def has_permission(self, request: Request, view):
+        return bool(
+            not (request.user and request.user.is_authenticated)
+        )

@@ -7,7 +7,7 @@ from education.serializers import (GradeSerializer)
 from people import models as PeopleModels
 from people.serializers import (TeacherSerializer, StudentSerializer)
 from EnglishClass.permissions import (
-    NotAllow, DeleteForAdmin, IsAdminUser, IsAdminOrReadOnly, AdminOrPersonel)
+    NotAllow, DeleteForAdmin, IsAdminUser, IsAdminOrReadOnly, AdminOrPersonel, IsAnonymousUser)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from drf_spectacular.utils import extend_schema
@@ -111,6 +111,8 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         """
         set log for logins that the users take
         """
+        permission_classes = [IsAnonymousUser]
+        
         data = request.data
         username = data['username']
         password = data['password']

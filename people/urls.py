@@ -11,10 +11,6 @@ student_router.register('', views.StudentViewset)
 student_profiles_router = DefaultRouter()
 student_profiles_router.register('', views.StudentProfileViewset)
 
-# me student router
-student_me = DefaultRouter()
-student_me.register('', views.StudentMeViewset)
-
 # teacher router
 teacher_router = DefaultRouter()
 teacher_router.register('', views.TeacherViewset)
@@ -33,7 +29,7 @@ urlpatterns = [
          name='student-profiles'),
     path('student-grades/', views.students_grades.as_view(),
          name='student_grades'),
-    path("student-me/", include(student_me.urls),
+    path("student-me/", views.StudentMe.as_view(),
          name="student-me"),
     path('teachers/', include(teacher_router.urls),
          name='teachers'),

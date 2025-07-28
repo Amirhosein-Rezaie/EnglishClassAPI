@@ -86,12 +86,8 @@ class students_grades(APIView):
 
 
 # me students
-class StudentMeViewset(ModelViewSet):
-    serializer_class = serializers.StudentSerializer
-    queryset = models.Students.objects.all()
-    permission_classes = [GetStudentsOnly]
-
-    def list(self, request: Request, *args, **kwargs):
+class StudentMe(APIView):
+    def get(self, request: Request):
         student_username = request.user
         return Response(
             serializers.StudentSerializer(models.Students.objects.filter(

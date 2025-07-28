@@ -1,7 +1,8 @@
 from . import models
 from . import serializers
 from rest_framework.viewsets import ModelViewSet
-from EnglishClass.permissions import (DeleteForAdmin, NotAllow)
+from EnglishClass.permissions import (
+    DeleteForAdmin, NotAllow, NotAllowDelete, AdminOrPersonel)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from EnglishClass.helper import dynamic_search, description_search_swagger
@@ -50,7 +51,7 @@ class TermViewset(ModelViewSet):
         ),
     ]
 )
-@permission_classes([IsAdminOrReadOnly])
+@permission_classes([AdminOrPersonel])
 class term_students(APIView):
     """
     اطلاعات زبان آموزانی که در ترم(متغیر) ثبت نام کرده اند
@@ -86,12 +87,7 @@ class term_students(APIView):
 class RegisterViewset(ModelViewSet):
     serializer_class = serializers.RegisterSerializer
     queryset = models.Registers.objects.all()
-    permission_classes = [IsAuthenticated]
-
-    def get_permissions(self):
-        if self.request.method in ['DELETE']:
-            return [NotAllow()]
-        return super().get_permissions()
+    permission_classes = [AdminOrPersonel, NotAllowDelete]
 
     @extend_schema(
         description=description_search_swagger
@@ -109,7 +105,7 @@ class RegisterViewset(ModelViewSet):
 class GradeViewset(ModelViewSet):
     serializer_class = serializers.GradeSerializer
     queryset = models.Grades.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AdminOrPersonel]
 
     def get_permissions(self):
         if self.request.method in ['DELETE']:
@@ -132,7 +128,7 @@ class GradeViewset(ModelViewSet):
 class BookSaleViewset(ModelViewSet):
     serializer_class = serializers.BookSaleSerializer
     queryset = models.BookSales.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AdminOrPersonel]
 
     def get_permissions(self):
         if self.request.method in ['DELETE']:
@@ -152,6 +148,7 @@ class BookSaleViewset(ModelViewSet):
 
 
 # export excel file of terms
+@permission_classes([AdminOrPersonel])
 class export_terms_excel(APIView):
     """
     خروجی فایل اکسل برای تمامی ترم ها
@@ -228,6 +225,7 @@ class export_terms_excel(APIView):
 
 
 # export excel file for grades
+@permission_classes([AdminOrPersonel])
 class export_grades_excel(APIView):
     """
     خروجی فایل اکسل برای تمامی نمره ها

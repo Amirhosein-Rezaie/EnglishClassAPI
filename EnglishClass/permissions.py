@@ -64,3 +64,11 @@ class AdminOrPersonel(BasePermission):
             (request.user and request.user.is_authenticated) and
             (request.user.role in [Users.ROLES.ADMIN, Users.ROLES.PERSONEL])
         )
+
+
+# not allow for delete method
+class NotAllowDelete(BasePermission):
+    def has_permission(self, request: Request, view):
+        return bool(
+            not (request.method in ['DELETE'])
+        )

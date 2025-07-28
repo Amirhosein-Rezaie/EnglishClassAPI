@@ -6,7 +6,8 @@ from education import models as EducationModels
 from education.serializers import (GradeSerializer)
 from people import models as PeopleModels
 from people.serializers import (TeacherSerializer, StudentSerializer)
-from EnglishClass.permissions import (NotAllow, DeleteForAdmin, IsAdminUser)
+from EnglishClass.permissions import (
+    NotAllow, DeleteForAdmin, IsAdminUser, IsAdminOrReadOnly, AdminOrPersonel)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from drf_spectacular.utils import extend_schema
@@ -42,12 +43,14 @@ class UserViewset(ModelViewSet):
 class UserProfileViewset(ModelViewSet):
     serializer_class = serializers.UserProfileSerializer
     queryset = models.UserProfile.objects.all()
+    permission_classes = [AdminOrPersonel]
 
 
 # levels viewset
 class LevelViewset(ModelViewSet):
     serializer_class = serializers.LevelSerializer
     queryset = models.levels.objects.all()
+    permission_classes = [IsAdminOrReadOnly]
 
     @extend_schema(
         description=description_search_swagger
@@ -65,7 +68,7 @@ class LevelViewset(ModelViewSet):
 class BookViewset(ModelViewSet):
     serializer_class = serializers.BookSerializer
     queryset = models.Books.objects.all()
-    permission_classes = [DeleteForAdmin]
+    permission_classes = [DeleteForAdmin, AdminOrPersonel]
 
     @extend_schema(
         description=description_search_swagger
@@ -88,8 +91,6 @@ class LoginViewset(ModelViewSet):
         method = self.request.method
         if method in ['DELETE', 'UPDATE', 'POST']:
             return [NotAllow()]
-        # if method in ['POST']:
-        #     return [AllowAny()]
         return super().get_permissions()
 
     @extend_schema(

@@ -1,7 +1,8 @@
 from . import serializers
 from . import models
 from rest_framework.viewsets import ModelViewSet
-from EnglishClass.permissions import (DeleteForAdmin, IsAdminOrReadOnly)
+from EnglishClass.permissions import (
+    DeleteForAdmin, IsAdminOrReadOnly, GetStudentsOnly)
 from rest_framework.request import Request
 from EnglishClass.helper import (
     dynamic_search, description_search_swagger, limit_paginate)
@@ -82,6 +83,22 @@ class students_grades(APIView):
         # serialize and response
         serialized_grades = GradeSerializer(paginated_grades, many=True).data
         return Response(serialized_grades, status=status.HTTP_200_OK)
+
+
+# me students
+class StudentMeViewset(ModelViewSet):
+    serializer_class = serializers.StudentSerializer
+    queryset = models.Students.objects.all()
+    permission_classes = [GetStudentsOnly]
+
+    def list(self, request: Request, *args, **kwargs):
+        student_username = request.user
+        return Response(
+            serializers.StudentSerializer(models.Students.objects.filter(
+                national_code=student_username
+            ), many=True).data,
+            status=status.HTTP_200_OK
+        )
 
 
 # student profiles

@@ -1,11 +1,11 @@
 from . import models
 from . import serializers
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from EnglishClass.permissions import (
-    DeleteForAdmin, NotAllow, NotAllowDelete, AdminOrPersonel)
-from rest_framework.permissions import IsAuthenticated
+    DeleteForAdmin, NotAllow, NotAllowDelete, AdminOrPersonel, IsStudent)
 from rest_framework.request import Request
-from EnglishClass.helper import dynamic_search, description_search_swagger
+from EnglishClass.helper import dynamic_search, description_search_swagger, limit_paginate
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.views import APIView
 from openpyxl import Workbook
@@ -18,8 +18,12 @@ from rest_framework import status
 from django.db.models import Q
 from people.models import Students
 from people.serializers import StudentSerializer
-from EnglishClass.permissions import IsAdminOrReadOnly
 from rest_framework.decorators import permission_classes
+from EnglishClass.pagination import DynamicPagination
+
+
+# paginator
+paginator = DynamicPagination()
 
 
 # terms
@@ -329,3 +333,22 @@ class PointsViewset(ModelViewSet):
         if self.request.method in ['DELETE']:
             return [NotAllow()]
         return super().get_permissions()
+
+
+# students points to teachers
+class StudnetsPointsTeachers(GenericViewSet, ListModelMixin, CreateModelMixin):
+    permission_classes = [IsStudent]
+    serializer_class = serializers.PointsSerializer
+    queryset = models.Points.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        student = self.request.user.username
+        points = models.Points.objects.filter(student__national_code=student)
+
+        # paginate
+        paginator.page_size = limit_paginate(request)
+        paginated_data = paginator.paginate_queryset(points, request)
+
+        return paginator.get_paginated_response(
+            serializers.PointsSerializer(paginated_data, many=True).data
+        )

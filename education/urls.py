@@ -23,6 +23,10 @@ booksale_router.register('', views.BookSaleViewset)
 points_router = DefaultRouter()
 points_router.register('', views.PointsViewset)
 
+# stundets points teachers router
+std_points_teachers_router = DefaultRouter()
+std_points_teachers_router.register('', views.StudnetsPointsTeachers)
+
 urlpatterns = [
     path('terms/', include(term_router.urls), name='terms'),
     path('terms-excel/', views.export_terms_excel.as_view(), name='terms_excel'),
@@ -32,4 +36,6 @@ urlpatterns = [
     path('grades-excel/', views.export_grades_excel.as_view(), name='grades_excel'),
     path('book-sales/', include(booksale_router.urls), name='book-sale-log'),
     path('points/', include(points_router.urls), name='points_of_teachers'),
+    path('studnet-points-teachers/', include(std_points_teachers_router.urls),
+         name='studnets_points_teachers')
 ]

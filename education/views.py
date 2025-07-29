@@ -324,3 +324,8 @@ class PointsViewset(ModelViewSet):
     serializer_class = serializers.PointsSerializer
     queryset = models.Points.objects.all()
     permission_classes = [AdminOrPersonel]
+
+    def get_permissions(self):
+        if self.request.method in ['DELETE']:
+            return [NotAllow()]
+        return super().get_permissions()

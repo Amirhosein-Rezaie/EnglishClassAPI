@@ -112,7 +112,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         set log for logins that the users take
         """
         permission_classes = [IsAnonymousUser]
-        
+
         data = request.data
         username = data['username']
         password = data['password']
@@ -200,8 +200,9 @@ class Dashboard(APIView):
                     grade['Videoclip_grade'] + \
                     grade['Film_grade'] + grade['Exam_grade']
                 total_grades.append(total_grade)
-            students_avrg_grades[f'{first_name} {last_name}'] = sum(
-                total_grades) / len(total_grades)
+            if len(total_grades) > 0:
+                students_avrg_grades[f'{first_name} {last_name}'] = sum(
+                    total_grades) / len(total_grades)
         students['students_avrg_grades'] = students_avrg_grades
         result['students'] = students
 

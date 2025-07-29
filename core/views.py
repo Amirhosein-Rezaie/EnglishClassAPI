@@ -10,7 +10,7 @@ from EnglishClass.permissions import (
     NotAllow, DeleteForAdmin, IsAdminUser, IsAdminOrReadOnly, AdminOrPersonel, IsAnonymousUser)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from EnglishClass.helper import dynamic_search, description_search_swagger
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import check_password
@@ -40,10 +40,25 @@ class UserViewset(ModelViewSet):
 
 
 # user profile
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name='all', description='برای ارسال تمام پروفایل ها برای ادمین', required=False, type=bool
+        )
+    ]
+)
 class UserProfileViewset(ModelViewSet):
+    """
+    ارسال تمام پروفایل ها برای ادمین، و برای هر کاربر ارسال پروفایل های خود
+    """
     serializer_class = serializers.UserProfileSerializer
     queryset = models.UserProfile.objects.all()
     permission_classes = [AdminOrPersonel]
+
+    def get_queryset(self):
+        if dict(self.request.query_params).get('all') and self.request.user.role == models.Users.ROLES.ADMIN:
+            return super().get_queryset()
+        return models.UserProfile.objects.filter(user=self.request.user.pk)
 
 
 # levels viewset

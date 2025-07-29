@@ -10,6 +10,7 @@ from django.db.models import (
 )
 from django.db.models.constants import LOOKUP_SEP
 from EnglishClass.pagination import DynamicPagination
+from core.models import Users
 
 
 # fields
@@ -92,3 +93,10 @@ def limit_paginate(request: Request):
     if request.query_params.get('limit'):
         return request.query_params.get('limit')
     return DynamicPagination.page_size
+
+
+# gets the profiles for owner
+def own_profiles(self, model: Model, foreignkey, super_class: super):
+    if dict(self.request.query_params).get('all') and self.request.user.role == Users.ROLES.ADMIN:
+        return super_class.get_queryset()
+    return model.objects.filter(Q(**{foreignkey: self.request.user.pk}))

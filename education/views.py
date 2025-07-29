@@ -317,3 +317,10 @@ class export_grades_excel(APIView):
         )
         response['Content-Disposition'] = 'attachment; filename="grades.xlsx"'
         return response
+
+
+# points
+class PointsViewset(ModelViewSet):
+    serializer_class = serializers.PointsSerializer
+    queryset = models.Points.objects.all()
+    permission_classes = [AdminOrPersonel]

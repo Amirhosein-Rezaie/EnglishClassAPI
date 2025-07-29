@@ -54,3 +54,13 @@ class BookSaleSerializer(ModelSerializer):
     class Meta:
         model = models.BookSales
         fields = '__all__'
+
+
+# points
+class PointsSerializer(ModelSerializer):
+    student_detail = StudentSerializer(read_only=True, source='student')
+    teacher_detail = TeacherSerializer(read_only=True, source='teacher')
+
+    class Meta:
+        model = models.Points
+        fields = '__all__'

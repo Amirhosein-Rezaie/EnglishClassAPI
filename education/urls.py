@@ -19,6 +19,10 @@ grade_router.register('', views.GradeViewset)
 booksale_router = DefaultRouter()
 booksale_router.register('', views.BookSaleViewset)
 
+# points router
+points_router = DefaultRouter()
+points_router.register('', views.PointsViewset)
+
 urlpatterns = [
     path('terms/', include(term_router.urls), name='terms'),
     path('terms-excel/', views.export_terms_excel.as_view(), name='terms_excel'),
@@ -27,4 +31,5 @@ urlpatterns = [
     path('grades/', include(grade_router.urls), name='grades'),
     path('grades-excel/', views.export_grades_excel.as_view(), name='grades_excel'),
     path('book-sales/', include(booksale_router.urls), name='book-sale-log'),
+    path('points/', include(points_router.urls), name='points_of_teachers'),
 ]

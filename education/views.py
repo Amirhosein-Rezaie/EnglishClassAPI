@@ -20,6 +20,8 @@ from people.models import Students
 from people.serializers import StudentSerializer
 from rest_framework.decorators import permission_classes
 from EnglishClass.pagination import DynamicPagination
+from education.models import Registers
+from rest_framework.exceptions import ValidationError
 
 
 # paginator
@@ -30,7 +32,7 @@ paginator = DynamicPagination()
 class TermViewset(ModelViewSet):
     serializer_class = serializers.TermSerializer
     queryset = models.Terms.objects.all()
-    permission_classes = [DeleteForAdmin]
+    permission_classes = [DeleteForAdmin, AdminOrPersonel]
 
     @extend_schema(
         description=description_search_swagger
@@ -352,3 +354,19 @@ class StudnetsPointsTeachers(GenericViewSet, ListModelMixin, CreateModelMixin):
         return paginator.get_paginated_response(
             serializers.PointsSerializer(paginated_data, many=True).data
         )
+
+    def create(self, request, *args, **kwargs):
+        teacher_id = request.data['teacher']
+        student_id = request.data['student']
+
+        count = Registers.objects.filter(Q(
+            student__id=student_id
+        ), Q(term__teacher__id=teacher_id)).count()
+
+        if count <= 0:
+            raise ValidationError(
+                detail="این زبان آموز با این معلم کلاسی نداشته است ... !",
+                code=status.HTTP_400_BAD_REQUEST,
+            )
+
+        return super().create(request, *args, **kwargs)

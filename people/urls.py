@@ -31,6 +31,8 @@ urlpatterns = [
          name='student_grades'),
     path("student-me/", views.StudentMe.as_view(),
          name="student-me"),
+    path("terms-of-student/", views.TermsOfStudent.as_view(),
+         name='terms_of_studnets'),
     path('teachers/', include(teacher_router.urls),
          name='teachers'),
     path('teachers-excel/', views.export_teachers_excel.as_view(),

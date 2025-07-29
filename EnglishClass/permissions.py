@@ -80,3 +80,13 @@ class IsAnonymousUser(BasePermission):
         return bool(
             not (request.user and request.user.is_authenticated)
         )
+
+
+# is student, admin, personel
+class StudentAdminPersonel(BasePermission):
+    def has_permission(self, request: Request, view):
+        return bool(
+            (request.user and request.user.is_authenticated) and
+            (IsAdminOrReadOnly.has_permission or
+             IsStudent.has_permission)
+        )

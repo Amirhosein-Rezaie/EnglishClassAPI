@@ -2,22 +2,23 @@ from . import serializers
 from . import models
 from rest_framework.viewsets import ModelViewSet
 from EnglishClass.permissions import (
-    DeleteForAdmin, IsAdminOrReadOnly, AdminOrPersonel, IsStudent)
+    DeleteForAdmin, IsAdminOrReadOnly, AdminOrPersonel, IsStudent, StudentAdminPersonel)
 from rest_framework.request import Request
 from EnglishClass.helper import (
     dynamic_search, description_search_swagger, limit_paginate)
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.views import APIView
 from .helper import export_excel
 from rest_framework.response import Response
 from rest_framework import status
-from education.models import (Grades)
-from education.serializers import (GradeSerializer)
+from education.models import (Grades, Terms, Registers)
+from education.serializers import (GradeSerializer, TermSerializer)
 from EnglishClass.pagination import DynamicPagination
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 from core.models import Users
 from django.contrib.auth.hashers import make_password
+from django.db.models import Q
+from rest_framework.exceptions import ValidationError
 
 
 # paginator
@@ -96,6 +97,55 @@ class StudentMe(APIView):
                 national_code=student_username
             ), many=True).data,
             status=status.HTTP_200_OK
+        )
+
+
+# terms of one student
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name='student-id',
+            description='شناسه زبان آموز اجباری در صورت لاگین نبودن زبان آموز',
+            required=True,
+            type=int
+        )
+    ],
+    responses=TermSerializer(many=True),
+)
+class TermsOfStudent(APIView):
+    """
+    a view get terms of one student
+    """
+    permission_classes = [StudentAdminPersonel]
+
+    def get(self, request: Request):
+        role = self.request.user.role
+
+        student_id = None
+        if role == Users.ROLES.STUDENT:
+            student_id = models.Students.objects.get(
+                national_code=self.request.user.username).pk
+        elif role != Users.ROLES.STUDENT:
+            if request.query_params.get('student-id'):
+                student_id = request.query_params.get('student-id')
+            else:
+                raise ValidationError(
+                    detail="شناسه زبان آموز ارسال نشده ... !",
+                    code=status.HTTP_400_BAD_REQUEST
+                )
+
+        terms = Terms.objects.filter(Q(
+            id__in=Registers.objects.filter(
+                student=student_id).values_list('term', flat=True)
+        ))
+
+        paginator.page_size = limit_paginate(request)
+        paginated_data = paginator.paginate_queryset(terms, request)
+
+        return paginator.get_paginated_response(
+            TermSerializer(
+                paginated_data, many=True
+            ).data
         )
 
 

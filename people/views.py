@@ -218,3 +218,35 @@ class export_teachers_excel(APIView):
             ],
             filename='teachers'
         )
+
+
+# teacher of a student
+class TeachersOfStudent(APIView):
+    def get(self, request: Request):
+        student_id = request.query_params.get('student-id')
+
+        if not student_id:
+            raise ValidationError(
+                detail="شناسه زبان آموز پیدا نشده است ... !",
+                code=status.HTTP_400_BAD_REQUEST
+            )
+
+        terms_ids = Registers.objects.filter(
+            Q(student__id=student_id)
+        ).values_list('term', flat=True)
+
+        teachers_ids = Terms.objects.filter(
+            Q(id__in=terms_ids)
+        ).values_list('teacher', flat=True)
+
+        teachers = models.Teachers.objects.filter(
+            Q(id__in=teachers_ids)
+        )
+
+        paginator.page_size = limit_paginate(request)
+        paginated_data = paginator.paginate_queryset(teachers, request)
+
+        return Response(
+            serializers.TeacherSerializer(paginated_data, many=True).data,
+            status=status.HTTP_200_OK
+        )

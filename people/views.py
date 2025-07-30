@@ -222,6 +222,17 @@ class export_teachers_excel(APIView):
 
 # teacher of a student
 class TeachersOfStudent(APIView):
+    @extend_schema(
+        description='تمام معلم هایی که با یک زبان آموز کلاس داشته است',
+        parameters=[
+            OpenApiParameter(
+                name='studnet-id',
+                description='شناسه زبان آموز (ارسال به صورت کویری پارامز)',
+                type=int,
+                required=True),
+        ],
+        responses=serializers.TeacherSerializer(many=True)
+    )
     def get(self, request: Request):
         student_id = request.query_params.get('student-id')
 
@@ -246,7 +257,6 @@ class TeachersOfStudent(APIView):
         paginator.page_size = limit_paginate(request)
         paginated_data = paginator.paginate_queryset(teachers, request)
 
-        return Response(
-            serializers.TeacherSerializer(paginated_data, many=True).data,
-            status=status.HTTP_200_OK
+        return paginator.get_paginated_response(
+            serializers.TeacherSerializer(paginated_data, many=True).data
         )

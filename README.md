@@ -4,7 +4,6 @@
 [![Django](https://img.shields.io/badge/Django-4.x-darkgreen?logo=django&logoColor=white)](https://www.djangoproject.com/) 
 [![DRF](https://img.shields.io/badge/DRF-API-red?logo=django&logoColor=white)](https://www.django-rest-framework.org/) 
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-DB-blue?logo=postgresql)](https://www.postgresql.org/)  
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
@@ -37,8 +36,8 @@ It provides APIs to manage **classes, students, and teachers**, supports **repor
 
 ## ⚙️ Installation & Usage
 
-### 1️⃣ Clone the repository
 ```bash
+1️⃣ Clone the repository
 git clone https://github.com/YourUserName/EnglishClass.git
 cd EnglishClass
 
@@ -51,10 +50,10 @@ source .venv/bin/activate   # Linux/Mac
 3️⃣ Install dependencies
 pip install -r requirements.txt
 
-5️⃣ Apply migrations
+4️⃣ Apply migrations
 python manage.py makemigrations
 python manage.py migrate
 
-6️⃣ Run the server
+5️⃣ Run the server
 python manage.py runserver
 ```

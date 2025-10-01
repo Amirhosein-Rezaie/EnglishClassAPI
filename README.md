@@ -22,7 +22,7 @@ It provides APIs to manage **classes, students, and teachers**, supports **repor
 
 ## ✨ Features
 - 📚 Manage **Classes, Students, Teachers, Books, Levels, Terms**
-- 🎬 You can do **Trade books, set grades for students, set point or score for teachers, set profiles of people
+- 🎬 You can do **Trade books, set grades for students, set point or score for teachers, set profiles of people**
 - 📊 Generate detailed **Reports**  
 - 📑 Export reports to **Excel**  
 - 🔐 Secure authentication with **JWT**  

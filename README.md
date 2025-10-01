@@ -39,27 +39,25 @@ It provides APIs to manage **classes, students, and teachers**, supports **repor
 
 ## ⚙️ Installation & Usage
 
-```bash
 1️⃣ Clone the repository
-git clone https://github.com/YourUserName/EnglishClassAPI.git
+```git clone https://github.com/YourUserName/EnglishClassAPI.git```
 cd EnglishClassAPI
 
 2️⃣ Create a virtual environment
-python -m venv .venv
+```python -m venv .venv```
 # Activate:
-source .venv/bin/activate   # Linux/Mac
-.venv\Scripts\activate      # Windows
+source ```.venv/bin/activate```   # Linux/Mac
+```.venv\Scripts\activate```     # Windows
 
 3️⃣ Install dependencies
-pip install -r requirements.txt
+```pip install -r requirements.txt```
 
 4️⃣ Apply migrations
-python manage.py makemigrations
-python manage.py migrate
+```python manage.py makemigrations```
+```python manage.py migrate```
 
 5️⃣ Run the server
-python manage.py runserver
+```python manage.py runserver```
 
 6️⃣ use documents
-after running the server open you browser and go to `http://127.0.0.1:8000/api/docs`
-```
+after running the server open you browser and go to ```http://127.0.0.1:8000/api/docs```

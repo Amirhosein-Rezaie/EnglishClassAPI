@@ -5,10 +5,9 @@
 [![DRF](https://img.shields.io/badge/DRF-API-red?logo=django&logoColor=white)](https://www.django-rest-framework.org/) 
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-DB-blue?logo=postgresql)](https://www.postgresql.org/)  
 
-<p align='center'>
+<p>
   <img src="https://skillicons.dev/icons?i=python,django,git,github,windows,vscode,postman,postgres">
 </p>
----
 
 ## 📖 Description
 **EnglishClass** is a mini project developed with **Django** and **Django REST Framework (DRF)**.  

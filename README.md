@@ -21,7 +21,8 @@ It provides APIs to manage **classes, students, and teachers**, supports **repor
 ---
 
 ## ✨ Features
-- 📚 Manage **Classes, Students, Teachers**  
+- 📚 Manage **Classes, Students, Teachers, Books, Levels, Terms**
+- 🎬 You can do **Trade books, set grades for students, set point or score for teachers, set profiles of people
 - 📊 Generate detailed **Reports**  
 - 📑 Export reports to **Excel**  
 - 🔐 Secure authentication with **JWT**  
@@ -32,7 +33,7 @@ It provides APIs to manage **classes, students, and teachers**, supports **repor
 ## 🛠️ Requirements
 - **Python 3.9+**  
 - **PostgreSQL** (running locally or remote)  
-- Virtual environment tool: `venv` / `pipenv` / `poetry`  
+- Virtual environment tool: `venv`
 
 ---
 
@@ -40,8 +41,8 @@ It provides APIs to manage **classes, students, and teachers**, supports **repor
 
 ```bash
 1️⃣ Clone the repository
-git clone https://github.com/YourUserName/EnglishClass.git
-cd EnglishClass
+git clone https://github.com/YourUserName/EnglishClassAPI.git
+cd EnglishClassAPI
 
 2️⃣ Create a virtual environment
 python -m venv .venv
@@ -58,4 +59,7 @@ python manage.py migrate
 
 5️⃣ Run the server
 python manage.py runserver
+
+6️⃣ use documents
+after running the server open you browser and go to `http://127.0.0.1:8000/api/docs`
 ```

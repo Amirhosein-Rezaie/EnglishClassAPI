@@ -60,5 +60,5 @@ source `.venv/bin/activate`   # Linux/Mac
 `python manage.py runserver`
 
 6️⃣ use documents
-after running the server open you browser and go to `http://127.0.0.1:8000/api/docs`
+after running the server open your browser and go to `http://127.0.0.1:8000/api/docs`
 ```

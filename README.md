@@ -40,7 +40,7 @@ It provides APIs to manage **classes, students, and teachers**, supports **repor
 ## ⚙️ Installation & Usage
 ```bash
 1️⃣ Clone the repository
-`git clone https://github.com/YourUserName/EnglishClassAPI.git`
+`git clone https://github.com/Amirhosein-Rezaie/EnglishClassAPI.git`
 `cd EnglishClassAPI`
 
 2️⃣ Create a virtual environment
@@ -60,5 +60,5 @@ source `.venv/bin/activate`   # Linux/Mac
 `python manage.py runserver`
 
 6️⃣ use documents
-after running the server open you browser and go to `http://127.0.0.1:8000/api/docs`
+after running the server open your browser and go to `http://127.0.0.1:8000/api/docs`
 ```
